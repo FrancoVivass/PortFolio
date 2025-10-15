@@ -4,7 +4,6 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { provideLottieOptions } from 'ngx-lottie';
-import player from 'lottie-web';
 
 /**
  * Configuración principal de la aplicación
@@ -39,7 +38,7 @@ export const appConfig: ApplicationConfig = {
     
     // Lottie animations
     provideLottieOptions({
-      player: () => player,
+      player: () => import('lottie-web'),
     }),
   ]
 };

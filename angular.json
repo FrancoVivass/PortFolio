@@ -42,7 +42,10 @@
                         "styles": [
                             "src/styles.scss"
                         ],
-                        "scripts": []
+                        "scripts": [],
+                        "allowedCommonJsDependencies": [
+                            "lottie-web"
+                        ]
                     },
                     "configurations": {
                         "production": {
@@ -54,8 +57,8 @@
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "6kB",
-                                    "maximumError": "10kB"
+                                    "maximumWarning": "15kB",
+                                    "maximumError": "20kB"
                                 }
                             ],
                             "outputHashing": "all"

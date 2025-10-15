@@ -1,0 +1,151 @@
+<!-- Laptop 3D GIGANTE en el FONDO DETRÁS DE TODO -->
+<app-scroll-3d-background 
+  modelPath="assets/models/laptop_alienpredator.glb"
+  sectionId="projects-page"
+  [initialRotation]="{ x: -0.3, y: 0.2, z: 0 }"
+  [scaleSize]="12"
+  class="projects-model"
+/>
+
+<!-- Hero Section -->
+<section id="projects-page" class="projects-hero content-wrapper">
+  <div class="hero-content-center">
+    <div class="hero-badge-pro">Portafolio</div>
+    <h1 class="hero-title-pro">Proyectos</h1>
+    <p class="hero-subtitle-pro">Experiencias digitales que cobran vida</p>
+  </div>
+  <div class="hero-orb-pro"></div>
+</section>
+
+<!-- Filters Section -->
+<section class="filters-section">
+  <div class="filters-container">
+    <button
+      (click)="setFilter('all')"
+      [class.active]="selectedFilter() === 'all'"
+      class="filter-btn"
+    >
+      Todos
+    </button>
+    
+    @for (category of categories; track category.value) {
+      <button
+        (click)="setFilter(category.value)"
+        [class.active]="selectedFilter() === category.value"
+        class="filter-btn"
+      >
+        {{ category.label }}
+      </button>
+    }
+  </div>
+</section>
+
+<!-- Projects Grid -->
+<section class="projects-showcase">
+  <div class="showcase-container">
+    @for (project of filteredProjects(); track project.id; let i = $index) {
+      <div 
+        class="showcase-item"
+        [attr.data-index]="i"
+        (click)="openProjectModal(project)"
+      >
+        <div class="showcase-card">
+          <!-- Badge de destacado -->
+          @if (project.featured) {
+            <div class="featured-badge">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              Destacado
+            </div>
+          }
+          
+          <!-- Imagen del proyecto -->
+          <div class="showcase-visual">
+            <div class="visual-inner">
+              <span class="project-num">#{{ i + 1 }}</span>
+            </div>
+            <div class="visual-overlay">
+              <span class="view-details">Ver Detalles</span>
+            </div>
+          </div>
+          
+          <!-- Información -->
+          <div class="showcase-info">
+            <h3 class="showcase-title">{{ project.title }}</h3>
+            <p class="showcase-desc">{{ project.description }}</p>
+            
+            <!-- Tags -->
+            <div class="showcase-tags">
+              @for (tag of project.tags; track tag) {
+                <span class="showcase-tag">{{ tag }}</span>
+              }
+            </div>
+            
+            <!-- Tech stack -->
+            <div class="showcase-tech">
+              <span class="tech-label">Stack:</span>
+              @for (tech of project.technologies.slice(0, 3); track tech) {
+                <span class="tech-item">{{ tech }}</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Modal de proyecto -->
+@if (selectedProject()) {
+  <div class="modal-overlay" (click)="closeProjectModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <!-- Close button -->
+      <button class="modal-close" (click)="closeProjectModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+      
+      <!-- Content -->
+      <div class="modal-header">
+        <h2 class="modal-title">{{ selectedProject()!.title }}</h2>
+        <p class="modal-category">{{ getCategoryLabel(selectedProject()!.category) }}</p>
+      </div>
+      
+      <div class="modal-body">
+        <p class="modal-description">{{ selectedProject()!.longDescription }}</p>
+        
+        <div class="modal-section">
+          <h3 class="modal-section-title">Tecnologías Utilizadas</h3>
+          <div class="modal-tech-grid">
+            @for (tech of selectedProject()!.technologies; track tech) {
+              <span class="modal-tech-badge">{{ tech }}</span>
+            }
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          @if (selectedProject()!.demoUrl) {
+            <a 
+              [href]="selectedProject()!.demoUrl!" 
+              target="_blank"
+              class="modal-btn modal-btn-primary"
+            >
+              Ver Demo en Vivo
+            </a>
+          }
+          @if (selectedProject()!.githubUrl) {
+            <a 
+              [href]="selectedProject()!.githubUrl!" 
+              target="_blank"
+              class="modal-btn modal-btn-secondary"
+            >
+              Ver en GitHub
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
