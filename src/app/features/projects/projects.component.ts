@@ -1,0 +1,713 @@
+import { Component, OnInit, AfterViewInit, signal, computed, PLATFORM_ID, inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { DataService, Project } from '@core/services/data.service';
+import { GsapService } from '@core/services/gsap.service';
+import { Scroll3dBackgroundComponent } from '@shared/components/scroll-3d-background/scroll-3d-background.component';
+
+/**
+ * Componente Proyectos con diseño cinematográfico
+ * Estilo Apple/ASUS ROG con efectos avanzados
+ */
+@Component({
+  selector: 'app-projects',
+  standalone: true,
+  imports: [CommonModule, Scroll3dBackgroundComponent],
+  template: `
+    <!-- Laptop 3D GIGANTE en el FONDO -->
+    <app-scroll-3d-background 
+      modelPath="assets/models/laptop_alienpredator.glb"
+      sectionId="projects-page"
+      [initialRotation]="{ x: -0.3, y: 0.2, z: 0 }"
+      [scaleSize]="12"
+    />
+    
+    <!-- Hero Section -->
+    <section id="projects-page" class="projects-hero content-wrapper">
+      <div class="hero-content-center">
+        <div class="hero-badge-pro">Portafolio</div>
+        <h1 class="hero-title-pro">Proyectos</h1>
+        <p class="hero-subtitle-pro">Experiencias digitales que cobran vida</p>
+      </div>
+      <div class="hero-orb-pro"></div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="filters-section">
+      <div class="filters-container">
+        <button
+          (click)="setFilter('all')"
+          [class.active]="selectedFilter() === 'all'"
+          class="filter-btn"
+        >
+          Todos
+        </button>
+        
+        @for (category of categories; track category.value) {
+          <button
+            (click)="setFilter(category.value)"
+            [class.active]="selectedFilter() === category.value"
+            class="filter-btn"
+          >
+            {{ category.label }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="projects-showcase">
+      <div class="showcase-container">
+        @for (project of filteredProjects(); track project.id; let i = $index) {
+          <div 
+            class="showcase-item"
+            [attr.data-index]="i"
+            (click)="openProjectModal(project)"
+          >
+            <div class="showcase-card">
+              <!-- Badge de destacado -->
+              @if (project.featured) {
+                <div class="featured-badge">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  Destacado
+                </div>
+              }
+              
+              <!-- Imagen del proyecto -->
+              <div class="showcase-visual">
+                <div class="visual-inner">
+                  <span class="project-num">#{{ i + 1 }}</span>
+                </div>
+                <div class="visual-overlay">
+                  <span class="view-details">Ver Detalles</span>
+                </div>
+              </div>
+              
+              <!-- Información -->
+              <div class="showcase-info">
+                <h3 class="showcase-title">{{ project.title }}</h3>
+                <p class="showcase-desc">{{ project.description }}</p>
+                
+                <!-- Tags -->
+                <div class="showcase-tags">
+                  @for (tag of project.tags; track tag) {
+                    <span class="showcase-tag">{{ tag }}</span>
+                  }
+                </div>
+                
+                <!-- Tech stack -->
+                <div class="showcase-tech">
+                  <span class="tech-label">Stack:</span>
+                  @for (tech of project.technologies.slice(0, 3); track tech) {
+                    <span class="tech-item">{{ tech }}</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Modal de proyecto -->
+    @if (selectedProject()) {
+      <div class="modal-overlay" (click)="closeProjectModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <!-- Close button -->
+          <button class="modal-close" (click)="closeProjectModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+          
+          <!-- Content -->
+          <div class="modal-header">
+            <h2 class="modal-title">{{ selectedProject()!.title }}</h2>
+            <p class="modal-category">{{ getCategoryLabel(selectedProject()!.category) }}</p>
+          </div>
+          
+          <div class="modal-body">
+            <p class="modal-description">{{ selectedProject()!.longDescription }}</p>
+            
+            <div class="modal-section">
+              <h3 class="modal-section-title">Tecnologías Utilizadas</h3>
+              <div class="modal-tech-grid">
+                @for (tech of selectedProject()!.technologies; track tech) {
+                  <span class="modal-tech-badge">{{ tech }}</span>
+                }
+              </div>
+            </div>
+            
+            <div class="modal-actions">
+              @if (selectedProject()!.demoUrl) {
+                <a 
+                  [href]="selectedProject()!.demoUrl!" 
+                  target="_blank"
+                  class="modal-btn modal-btn-primary"
+                >
+                  Ver Demo en Vivo
+                </a>
+              }
+              @if (selectedProject()!.githubUrl) {
+                <a 
+                  [href]="selectedProject()!.githubUrl!" 
+                  target="_blank"
+                  class="modal-btn modal-btn-secondary"
+                >
+                  Ver en GitHub
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  `,
+  styles: [`
+    .content-wrapper {
+      position: relative;
+      z-index: 10;
+    }
+
+    :host {
+      display: block;
+      background: #000000;
+    }
+
+    /* ===== HERO ===== */
+    .projects-hero {
+      position: relative;
+      height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at top, #0a0e27 0%, #000000 100%);
+      overflow: hidden;
+    }
+
+    .hero-content-center {
+      text-align: center;
+      z-index: 2;
+    }
+
+    .hero-badge-pro {
+      display: inline-block;
+      padding: 8px 20px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 50px;
+      color: #8b5cf6;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      animation: fadeSlideDown 1s ease-out;
+    }
+
+    .hero-title-pro {
+      font-size: clamp(56px, 10vw, 120px);
+      font-weight: 900;
+      background: linear-gradient(135deg, #667eea 0%, #06b6d4 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      animation: fadeSlideUp 1s ease-out 0.2s both, gradientShift 8s ease infinite;
+    }
+
+    .hero-subtitle-pro {
+      font-size: clamp(18px, 3vw, 28px);
+      color: rgba(226, 232, 240, 0.7);
+      animation: fadeIn 1.5s ease-out 0.4s both;
+    }
+
+    .hero-orb-pro {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+      filter: blur(100px);
+      animation: orbFloat 10s ease-in-out infinite;
+    }
+
+    /* ===== FILTERS ===== */
+    .filters-section {
+      padding: 40px 0;
+      background: linear-gradient(to bottom, #000000 0%, #0a0e27 100%);
+      position: sticky;
+      top: 80px;
+      z-index: 20;
+      backdrop-filter: blur(20px);
+    }
+
+    .filters-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 20px;
+    }
+
+    .filter-btn {
+      padding: 12px 32px;
+      background: rgba(20, 27, 52, 0.6);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 50px;
+      color: rgba(226, 232, 240, 0.7);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 5px 25px rgba(102, 126, 234, 0.5);
+    }
+
+    /* ===== PROJECTS SHOWCASE ===== */
+    .projects-showcase {
+      min-height: 100vh;
+      padding: 100px 0 200px;
+      background: #0a0e27;
+    }
+
+    .showcase-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+      gap: 50px;
+    }
+
+    @media (max-width: 768px) {
+      .showcase-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .showcase-item {
+      opacity: 0;
+      transform: translateY(50px);
+      cursor: pointer;
+    }
+
+    .showcase-card {
+      position: relative;
+      background: rgba(20, 27, 52, 0.4);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 24px;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+    }
+
+    .showcase-card:hover {
+      transform: translateY(-20px) rotateX(5deg);
+      border-color: rgba(139, 92, 246, 0.8);
+      box-shadow: 0 40px 100px rgba(139, 92, 246, 0.5);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #000;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 5px 20px rgba(251, 191, 36, 0.5);
+    }
+
+    .featured-badge svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .showcase-visual {
+      position: relative;
+      height: 350px;
+      overflow: hidden;
+    }
+
+    .visual-inner {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #06b6d4 100%);
+      background-size: 200% 200%;
+      animation: gradientFlow 10s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.6s;
+    }
+
+    .showcase-card:hover .visual-inner {
+      transform: scale(1.1) rotate(2deg);
+    }
+
+    .project-num {
+      font-size: 120px;
+      font-weight: 900;
+      background: rgba(0, 0, 0, 0.2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    }
+
+    .visual-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 50%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 30px;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .showcase-card:hover .visual-overlay {
+      opacity: 1;
+    }
+
+    .view-details {
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .showcase-info {
+      padding: 32px;
+    }
+
+    .showcase-title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 16px;
+    }
+
+    .showcase-desc {
+      font-size: 16px;
+      color: rgba(226, 232, 240, 0.7);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .showcase-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .showcase-tag {
+      padding: 6px 16px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 20px;
+      font-size: 13px;
+      color: #8b5cf6;
+      font-weight: 600;
+    }
+
+    .showcase-tech {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tech-label {
+      font-size: 14px;
+      color: rgba(226, 232, 240, 0.5);
+      font-weight: 600;
+    }
+
+    .tech-item {
+      padding: 4px 12px;
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      border-radius: 15px;
+      font-size: 12px;
+      color: #06b6d4;
+      font-weight: 600;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.3s;
+    }
+
+    .modal-content {
+      position: relative;
+      background: rgba(20, 27, 52, 0.95);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 24px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      backdrop-filter: blur(20px);
+      animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 50%;
+      color: #ef4444;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      z-index: 10;
+    }
+
+    .modal-close svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .modal-close:hover {
+      background: #ef4444;
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    .modal-header {
+      padding: 50px 50px 30px;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .modal-title {
+      font-size: 42px;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 12px;
+    }
+
+    .modal-category {
+      font-size: 16px;
+      color: #06b6d4;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .modal-body {
+      padding: 40px 50px;
+    }
+
+    .modal-description {
+      font-size: 18px;
+      line-height: 1.8;
+      color: rgba(226, 232, 240, 0.8);
+      margin-bottom: 40px;
+    }
+
+    .modal-section {
+      margin-bottom: 40px;
+    }
+
+    .modal-section-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 20px;
+    }
+
+    .modal-tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .modal-tech-badge {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+      border: 1px solid rgba(102, 126, 234, 0.4);
+      border-radius: 25px;
+      font-size: 15px;
+      color: #e2e8f0;
+      font-weight: 600;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .modal-btn {
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.4s;
+      display: inline-block;
+    }
+
+    .modal-btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 5px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .modal-btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    .modal-btn-secondary {
+      background: transparent;
+      border: 2px solid #06b6d4;
+      color: #06b6d4;
+    }
+
+    .modal-btn-secondary:hover {
+      background: #06b6d4;
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes gradientFlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(50px, -50px) scale(1.1); }
+    }
+  `]
+})
+export class ProjectsComponent implements OnInit, AfterViewInit {
+  private platformId = inject(PLATFORM_ID);
+  public projects = signal<Project[]>([]);
+  public selectedFilter = signal<string>('all');
+  public selectedProject = signal<Project | null>(null);
+
+  public categories = [
+    { value: 'angular', label: 'Angular' },
+    { value: 'fullstack', label: 'Full Stack' },
+    { value: 'ui-ux', label: 'UI/UX' }
+  ];
+
+  public filteredProjects = computed(() => {
+    const filter = this.selectedFilter();
+    if (filter === 'all') {
+      return this.projects();
+    }
+    return this.projects().filter(p => p.category === filter);
+  });
+
+  constructor(
+    private dataService: DataService,
+    private gsapService: GsapService
+  ) {}
+
+  ngOnInit(): void {
+    this.dataService.getProjects().subscribe(projects => {
+      this.projects.set(projects);
+    });
+  }
+
+  ngAfterViewInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    setTimeout(() => {
+      this.gsapService.fadeInOnScroll('.showcase-item', { stagger: 0.15 });
+    }, 500);
+  }
+
+  setFilter(filter: string): void {
+    this.selectedFilter.set(filter);
+    
+    // Re-animar cuando cambia el filtro
+    setTimeout(() => {
+      if (isPlatformBrowser(this.platformId)) {
+        this.gsapService.fadeInOnScroll('.showcase-item', { stagger: 0.15 });
+      }
+    }, 100);
+  }
+
+  openProjectModal(project: Project): void {
+    this.selectedProject.set(project);
+  }
+
+  closeProjectModal(): void {
+    this.selectedProject.set(null);
+  }
+
+  getCategoryLabel(category: string): string {
+    const cat = this.categories.find(c => c.value === category);
+    return cat ? cat.label : category;
+  }
+}

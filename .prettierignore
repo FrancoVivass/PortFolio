@@ -1,0 +1,13 @@
+# Ignore artifacts:
+dist
+build
+coverage
+node_modules
+
+# Ignore all config files:
+*.config.js
+*.config.ts
+
+# Ignore generated files:
+.angular
+
