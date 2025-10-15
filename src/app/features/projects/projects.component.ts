@@ -13,12 +13,13 @@ import { Scroll3dBackgroundComponent } from '@shared/components/scroll-3d-backgr
   standalone: true,
   imports: [CommonModule, Scroll3dBackgroundComponent],
   template: `
-    <!-- Laptop 3D GIGANTE en el FONDO -->
+    <!-- Laptop 3D GIGANTE en el FONDO DETRÁS DE TODO -->
     <app-scroll-3d-background 
       modelPath="assets/models/laptop_alienpredator.glb"
       sectionId="projects-page"
       [initialRotation]="{ x: -0.3, y: 0.2, z: 0 }"
       [scaleSize]="12"
+      class="projects-model"
     />
     
     <!-- Hero Section -->
@@ -165,10 +166,33 @@ import { Scroll3dBackgroundComponent } from '@shared/components/scroll-3d-backgr
     }
   `,
   styles: [`
-    .content-wrapper {
-      position: relative;
-      z-index: 10;
-    }
+        .content-wrapper {
+          position: relative;
+          z-index: 10;
+        }
+        
+        .projects-model {
+          z-index: 0 !important;
+        }
+        
+        .showcase-card {
+          background: var(--card-bg);
+          border: 1px solid var(--border-color);
+          border-radius: 20px;
+          overflow: hidden;
+          backdrop-filter: blur(10px);
+          transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          cursor: pointer;
+          position: relative;
+          z-index: 20;
+          box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+        }
+        
+        .showcase-card:hover {
+          transform: translateY(-15px) scale(1.02);
+          border-color: var(--text-accent);
+          box-shadow: 0 20px 60px rgba(139, 92, 246, 0.4);
+        }
 
     :host {
       display: block;

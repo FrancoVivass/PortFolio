@@ -29,12 +29,12 @@ import { LogoComponent } from '@shared/components/logo/logo.component';
             @for (item of navItems; track item.path) {
               <a
                 [routerLink]="item.path"
-                routerLinkActive="text-accent-cyan"
+                routerLinkActive="text-accent-violet"
                 [routerLinkActiveOptions]="{exact: false}"
-                class="text-sm font-medium text-dark-text dark:text-dark-text hover:text-accent-cyan transition-colors relative group"
+                class="text-sm font-medium text-light-text dark:text-dark-text hover:text-accent-violet transition-colors relative group"
               >
                 {{ item.label }}
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-cyan group-hover:w-full transition-all duration-300"></span>
+                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-accent-violet group-hover:w-full transition-all duration-300"></span>
               </a>
             }
           </div>
