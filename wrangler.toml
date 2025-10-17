@@ -1,7 +1,0 @@
-name = "portfolio-angular"
-compatibility_date = "2025-10-17"
-
-# Config para Cloudflare Pages
-pages_build_output_dir = "dist/portfolio/browser"
-
-

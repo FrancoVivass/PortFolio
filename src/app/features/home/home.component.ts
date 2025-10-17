@@ -5,7 +5,6 @@ import { DataService, PersonalInfo } from '@core/services/data.service';
 import { GsapService } from '@core/services/gsap.service';
 import { ScrollRevealComponent } from '@shared/components/scroll-reveal/scroll-reveal.component';
 import { Scroll3dBackgroundComponent } from '@shared/components/scroll-3d-background/scroll-3d-background.component';
-import { FordCinematicComponent } from '@shared/components/ford-cinematic/ford-cinematic.component';
 
 /**
  * Componente Home con ScrollTelling tipo Apple/ASUS ROG
@@ -14,7 +13,7 @@ import { FordCinematicComponent } from '@shared/components/ford-cinematic/ford-c
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, ScrollRevealComponent, Scroll3dBackgroundComponent, FordCinematicComponent],
+  imports: [CommonModule, RouterModule, ScrollRevealComponent, Scroll3dBackgroundComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
