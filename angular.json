@@ -37,7 +37,13 @@
                                 "glob": "**/*",
                                 "input": "public"
                             },
-                            "src/assets"
+                            {
+                                "glob": "**/*",
+                                "input": "src/assets",
+                                "ignore": [
+                                    "models/commodore_64__computer.glb"
+                                ]
+                            }
                         ],
                         "styles": [
                             "src/styles.scss"
