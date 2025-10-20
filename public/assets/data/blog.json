@@ -1,0 +1,10 @@
+[
+  {
+    "id": "optimizar-angular-animaciones",
+    "title": "Optimizar animaciones en Angular con GSAP y ScrollTrigger",
+    "date": "2025-10-20",
+    "tags": ["Angular", "GSAP", "Performance"],
+    "summary": "Buenas prácticas para integrar animaciones fluidas sin afectar Core Web Vitals.",
+    "content": "<p>Contenido del post en HTML simple o Markdown renderizado.</p>"
+  }
+]

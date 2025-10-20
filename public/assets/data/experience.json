@@ -1,0 +1,9 @@
+[
+  {
+    "company": "Empresa Ejemplo",
+    "role": "Frontend Developer",
+    "period": "2023 - Presente",
+    "summary": "Desarrollo de interfaces en Angular con animaciones y foco en performance.",
+    "tech": ["Angular", "TypeScript", "GSAP", "RxJS"]
+  }
+]

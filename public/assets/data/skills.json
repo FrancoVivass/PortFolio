@@ -1,0 +1,7 @@
+[
+  { "name": "Angular", "level": "Avanzado", "category": "Frontend" },
+  { "name": "TypeScript", "level": "Avanzado", "category": "Frontend" },
+  { "name": "GSAP / ScrollTrigger", "level": "Avanzado", "category": "Animaciones" },
+  { "name": "RxJS", "level": "Intermedio", "category": "Frontend" },
+  { "name": "Node.js", "level": "Intermedio", "category": "Backend" }
+]

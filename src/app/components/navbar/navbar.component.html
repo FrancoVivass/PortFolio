@@ -1,0 +1,65 @@
+<header class="site-header" [class.scrolled]="isScrolled" [class.hidden]="isHidden">
+  <div class="container">
+    <nav class="nav">
+      <!-- Logo -->
+      <div class="brand">
+        <a href="/" class="brand-link">
+          <div class="logo-container">
+            <img src="/logo.png" alt="Franco Vivas Logo" class="logo-image">
+            <div class="logo-glow"></div>
+          </div>
+        </a>
+      </div>
+      
+      <!-- Desktop Menu -->
+      <div class="menu" [class.active]="isMenuOpen" #menu>
+        <!-- Close Button (Mobile Only) -->
+        <button class="menu-close" (click)="closeMenu()" aria-label="Cerrar menú">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+        
+        <!-- Menu Links -->
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="menu-link" (click)="navigateTo('/')">
+          <span class="link-text">Inicio</span>
+        </a>
+        <a routerLink="/about" routerLinkActive="active" class="menu-link" (click)="navigateTo('/about')">
+          <span class="link-text">Sobre mí</span>
+        </a>
+        <a routerLink="/projects" routerLinkActive="active" class="menu-link" (click)="navigateTo('/projects')">
+          <span class="link-text">Proyectos</span>
+        </a>
+        <a routerLink="/skills" routerLinkActive="active" class="menu-link" (click)="navigateTo('/skills')">
+          <span class="link-text">Habilidades</span>
+        </a>
+        <a routerLink="/services" routerLinkActive="active" class="menu-link" (click)="navigateTo('/services')">
+          <span class="link-text">Servicios</span>
+        </a>
+        <a routerLink="/blog" routerLinkActive="active" class="menu-link" (click)="navigateTo('/blog')">
+          <span class="link-text">Blog</span>
+        </a>
+        <a routerLink="/contact" routerLinkActive="active" class="menu-link" (click)="navigateTo('/contact')">
+          <span class="link-text">Contacto</span>
+        </a>
+      </div>
+      
+      <!-- Mobile Menu Toggle -->
+      <button 
+        class="menu-toggle"
+        [class.active]="isMenuOpen"
+        (click)="toggleMenu()"
+        aria-label="Toggle menu"
+      >
+        <div class="hamburger">
+          <span class="line line-1"></span>
+          <span class="line line-2"></span>
+          <span class="line line-3"></span>
+        </div>
+      </button>
+    </nav>
+  </div>
+  
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-overlay" [class.active]="isMenuOpen" (click)="closeMenu()"></div>
+</header>
