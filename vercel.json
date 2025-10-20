@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "angular.json", "use": "@vercel/static-build", "config": { "distDir": "dist/portfolio/browser" } }
+    { "src": "angular.json", "use": "@vercel/static-build", "config": { "distDir": "dist/portfolio-franco" } }
   ],
   "routes": [
     { "src": "/(.*)", "dest": "/index.html" }
