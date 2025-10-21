@@ -8,14 +8,7 @@ import { AnimatedBackgroundComponent } from './components/animated-background/an
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, NavbarComponent, FooterComponent, AnimatedBackgroundComponent],
-  template: `
-    <app-animated-background></app-animated-background>
-    <app-navbar></app-navbar>
-    <main class="main-content">
-      <router-outlet />
-    </main>
-    <app-footer></app-footer>
-  `,
+  templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
