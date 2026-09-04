@@ -41,7 +41,7 @@
         <div class="project-body"><p class="eyebrow">{{ project.eyebrow }}</p><h3>{{ project.name }}</h3><p class="description">{{ project.description }}</p><p class="result"><b>Impacto</b>{{ project.result }}</p>
           <div class="tags"><span *ngFor="let tech of project.tech">{{ tech }}</span></div>
         </div>
-        <div class="project-foot"><span>{{ project.status }}</span><a *ngIf="project.repo" [href]="project.repo" target="_blank" rel="noopener">Ver repositorio ↗</a></div>
+        <div class="project-foot"><span>{{ project.status }}</span><div><a *ngIf="project.live" [href]="project.live" target="_blank" rel="noopener">Abrir demo ↗</a><a *ngIf="project.repo" [href]="project.repo" target="_blank" rel="noopener">Ver código ↗</a></div></div>
       </article>
     </div>
     <a class="github-link" href="https://github.com/FrancoVivass" target="_blank" rel="noopener">Ver los 21 repositorios públicos en GitHub <span>↗</span></a>
@@ -66,10 +66,22 @@
       <p>Mi experiencia también incluye soporte técnico, redes y sistemas de videovigilancia para entornos operativos. Esa cercanía con problemas concretos define mi forma de desarrollar: entender primero, construir después.</p>
       <div class="skill-groups"><div><b>Construyo con</b><span>Angular · TypeScript · Supabase · PostgreSQL · APIs REST</span></div><div><b>También trabajo</b><span>Tailwind · GSAP · Three.js · Git · Cloudflare · Vercel</span></div></div>
     </div>
+    <div class="experience">
+      <p class="kicker">Trayectoria técnica</p>
+      <article><span>2026</span><div><h3>Secretaría de Seguridad / Centro de Operaciones y Monitoreo</h3><p>Instalación, configuración y mantenimiento de videovigilancia, DVR, redes y acceso remoto para entornos operativos.</p></div></article>
+      <article><span>Experiencia anterior</span><div><h3>CNRT</h3><p>Experiencia laboral en un entorno institucional, incorporando criterios de responsabilidad, operación y soporte.</p></div></article>
+      <article><span>Actualidad</span><div><h3>Desarrollo independiente</h3><p>Análisis y construcción de páginas, sistemas de gestión y productos web propios para resolver necesidades concretas.</p></div></article>
+      <article><span>Agosto 2026</span><div><h3>Analista de Sistemas</h3><p>Carrera finalizada en el Instituto Francisco de Paula Robles, Dolores.</p></div></article>
+    </div>
+  </section>
+
+  <section class="faq section" id="preguntas">
+    <div class="section-heading"><div><p class="kicker">04 / Preguntas frecuentes</p><h2>Antes de empezar un proyecto.</h2></div><p>Respuestas directas sobre alcance, pagos, publicación y mantenimiento.</p></div>
+    <div class="faq-list"><details *ngFor="let faq of faqs"><summary>{{ faq.question }}<span>+</span></summary><p>{{ faq.answer }}</p></details></div>
   </section>
 
   <section class="contact section" id="contacto">
-    <div class="contact-intro"><p class="kicker">04 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
+    <div class="contact-intro"><p class="kicker">05 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
       <div class="estimate"><small>Referencia para este tipo de proyecto</small><strong>Desde USD {{ estimate | number }}</strong><span>El presupuesto final se define después de conversar.</span></div>
       <div class="socials"><a href="mailto:francovivasa@gmail.com">Email ↗</a><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/franco-vivas-ab915628a" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://instagram.com/fran.vivas_ok" target="_blank" rel="noopener">Instagram ↗</a></div>
     </div>
