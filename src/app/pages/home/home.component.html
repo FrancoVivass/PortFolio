@@ -48,11 +48,11 @@
   </section>
 
   <section class="services section" id="servicios">
-    <div class="section-heading"><div><p class="kicker">02 / Servicios y valores</p><h2>Alcances claros desde el comienzo.</h2></div><p>Valores de referencia en USD para mantenerlos estables. En Argentina se cotiza en pesos al tipo de cambio acordado.</p></div>
+    <div class="section-heading"><div><p class="kicker">02 / Servicios y valores</p><h2>Alcances claros desde el comienzo.</h2></div><p>Valores orientativos para proyectos en Argentina. Se actualizan al confirmar el alcance; para clientes internacionales se cotiza en USD.</p></div>
     <div class="service-list">
       <article *ngFor="let service of services; let i = index" class="service-card">
         <span class="service-index">0{{ i + 1 }}</span><div><h3>{{ service.title }}</h3><p>{{ service.copy }}</p><small>{{ service.includes }}</small></div>
-        <div class="price"><small>Desde</small><strong>USD {{ service.price | number }}</strong><span>{{ service.time }}</span></div>
+        <div class="price"><small>Desde</small><strong>{{ service.price | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong><span>ARS · {{ service.time }}</span></div>
       </article>
     </div>
     <div class="terms"><p><b>Forma de trabajo</b> 50% al comenzar y 50% antes de publicar. Incluye hasta 3 rondas de revisión.</p><p>Dominio, hosting, licencias y servicios externos se presupuestan por separado. Todo valor es orientativo y se confirma luego de definir el alcance.</p></div>
@@ -82,7 +82,7 @@
 
   <section class="contact section" id="contacto">
     <div class="contact-intro"><p class="kicker">05 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
-      <div class="estimate"><small>Referencia para este tipo de proyecto</small><strong>Desde USD {{ estimate | number }}</strong><span>El presupuesto final se define después de conversar.</span></div>
+      <div class="estimate"><small>Referencia para este tipo de proyecto</small><strong>Desde {{ estimate | currency:'ARS':'symbol-narrow':'1.0-0' }} ARS</strong><span>El presupuesto final se define después de conversar.</span></div>
       <div class="socials"><a href="mailto:francovivasa@gmail.com">Email ↗</a><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/franco-vivas-ab915628a" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://instagram.com/fran.vivas_ok" target="_blank" rel="noopener">Instagram ↗</a></div>
     </div>
     <form [formGroup]="contactForm" (ngSubmit)="submit()" novalidate>
@@ -91,7 +91,7 @@
       <div class="field half"><label for="email">Email *</label><input id="email" type="email" formControlName="email" autocomplete="email" placeholder="nombre@email.com"><small *ngIf="contactForm.controls.email.touched && contactForm.controls.email.invalid">Ingresá un email válido.</small></div>
       <div class="field half"><label for="phone">WhatsApp</label><input id="phone" formControlName="phone" autocomplete="tel" placeholder="Código de área + número"></div>
       <div class="field half"><label for="service">Servicio *</label><select id="service" formControlName="service" (change)="updateEstimate()"><option *ngFor="let service of services" [value]="service.value">{{ service.title }}</option></select></div>
-      <div class="field half"><label for="budget">Presupuesto aproximado</label><select id="budget" formControlName="budget"><option>USD 300—600</option><option>USD 600—1.200</option><option>USD 1.200—2.500</option><option>Más de USD 2.500</option><option>Necesito orientación</option></select></div>
+      <div class="field half"><label for="budget">Presupuesto aproximado</label><select id="budget" formControlName="budget"><option>$250.000—$500.000 ARS</option><option>$500.000—$900.000 ARS</option><option>$900.000—$1.500.000 ARS</option><option>Más de $1.500.000 ARS</option><option>Necesito orientación</option></select></div>
       <div class="field"><label for="deadline">¿Cuándo te gustaría comenzar?</label><input id="deadline" formControlName="deadline" placeholder="Por ejemplo: octubre de 2026"></div>
       <div class="field"><label for="message">Proyecto *</label><textarea id="message" formControlName="message" rows="5" placeholder="Contame qué querés mejorar, quién lo va a usar y qué resultado esperás."></textarea><small *ngIf="contactForm.controls.message.touched && contactForm.controls.message.invalid">Contame un poco más (mínimo 20 caracteres).</small></div>
       <input class="honeypot" tabindex="-1" formControlName="website" autocomplete="off" aria-hidden="true">
