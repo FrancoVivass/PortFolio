@@ -25,6 +25,7 @@
       <div class="hero-actions">
         <button class="primary" (click)="scrollTo('contacto')">Solicitar presupuesto <span>↗</span></button>
         <button class="text-link" (click)="scrollTo('proyectos')">Explorar proyectos <span>↓</span></button>
+        <button class="text-link tour-start" (click)="startTour()">Tour interactivo <span>▶</span></button>
       </div>
       <div class="hero-meta"><span>Analista de Sistemas</span><span>Full-Stack Developer</span><span>Dolores, Argentina</span></div>
     </div>
@@ -83,14 +84,14 @@
   </section>
 
   <section class="services section" id="servicios">
-    <div class="section-heading"><div><p class="kicker">04 / Servicios y valores</p><h2>Alcances claros desde el comienzo.</h2></div><p>Valores orientativos para proyectos en Argentina. Se actualizan al confirmar el alcance; para clientes internacionales se cotiza en USD.</p></div>
+    <div class="section-heading"><div><p class="kicker">04 / Servicios</p><h2>Soluciones pensadas para cada necesidad.</h2></div><p>El presupuesto se prepara después de conocer el objetivo, el alcance y las integraciones necesarias.</p></div>
     <div class="service-list">
       <article *ngFor="let service of services; let i = index" class="service-card">
         <span class="service-index">0{{ i + 1 }}</span><div><h3>{{ service.title }}</h3><p>{{ service.copy }}</p><small>{{ service.includes }}</small></div>
-        <div class="price"><small>Desde</small><strong>{{ service.price | currency:'ARS':'symbol-narrow':'1.0-0' }}</strong><span>ARS · {{ service.time }}</span></div>
+        <div class="price"><small>{{ service.time }}</small><button (click)="contactForm.controls.service.setValue(service.value); scrollTo('contacto')">Consultar presupuesto ↗</button></div>
       </article>
     </div>
-    <div class="terms"><p><b>Forma de trabajo</b> 50% al comenzar y 50% antes de publicar. Incluye hasta 3 rondas de revisión.</p><p>Dominio, hosting, licencias y servicios externos se presupuestan por separado. Todo valor es orientativo y se confirma luego de definir el alcance.</p></div>
+    <div class="terms"><p><b>Forma de trabajo</b> 50% al comenzar y 50% antes de publicar. Incluye hasta 3 rondas de revisión.</p><p>Dominio, hosting, licencias y servicios externos se presupuestan por separado después de definir el alcance.</p></div>
   </section>
 
   <section class="profile section" id="perfil">
@@ -117,7 +118,7 @@
 
   <section class="contact section" id="contacto">
     <div class="contact-intro"><p class="kicker">07 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
-      <div class="estimate"><small>Referencia para este tipo de proyecto</small><strong>Desde {{ estimate | currency:'ARS':'symbol-narrow':'1.0-0' }} ARS</strong><span>El presupuesto final se define después de conversar.</span></div>
+      <div class="estimate"><small>Presupuesto personalizado</small><strong>Contame tu idea</strong><span>La primera consulta es gratuita y podés continuar directamente por WhatsApp.</span></div>
       <div class="socials"><a href="mailto:francovivasa@gmail.com">Email ↗</a><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/franco-vivas-ab915628a" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://instagram.com/fran.vivas_ok" target="_blank" rel="noopener">Instagram ↗</a></div>
     </div>
     <form [formGroup]="contactForm" (ngSubmit)="submit()" novalidate>
@@ -126,8 +127,7 @@
       <div class="field half"><label for="email">Email *</label><input id="email" type="email" formControlName="email" autocomplete="email" placeholder="nombre@email.com"><small *ngIf="contactForm.controls.email.touched && contactForm.controls.email.invalid">Ingresá un email válido.</small></div>
       <div class="field half"><label for="phone">WhatsApp</label><input id="phone" formControlName="phone" autocomplete="tel" placeholder="Código de área + número"></div>
       <div class="field half"><label for="service">Servicio *</label><select id="service" formControlName="service" (change)="updateEstimate()"><option *ngFor="let service of services" [value]="service.value">{{ service.title }}</option></select></div>
-      <div class="field half"><label for="budget">Presupuesto aproximado</label><select id="budget" formControlName="budget"><option>$250.000—$500.000 ARS</option><option>$500.000—$900.000 ARS</option><option>$900.000—$1.500.000 ARS</option><option>Más de $1.500.000 ARS</option><option>Necesito orientación</option></select></div>
-      <fieldset class="addons"><legend>¿Qué debería incluir?</legend><label><input type="checkbox" formControlName="admin" (change)="updateEstimate()"><span>Panel administrativo<small>+$180.000</small></span></label><label><input type="checkbox" formControlName="database" (change)="updateEstimate()"><span>Base de datos y usuarios<small>+$220.000</small></span></label><label><input type="checkbox" formControlName="payments" (change)="updateEstimate()"><span>Pagos online<small>+$160.000</small></span></label><label><input type="checkbox" formControlName="rush" (change)="updateEstimate()"><span>Entrega prioritaria<small>+25%</small></span></label></fieldset>
+      <fieldset class="addons"><legend>¿Qué debería incluir?</legend><label><input type="checkbox" formControlName="admin"><span>Panel administrativo</span></label><label><input type="checkbox" formControlName="database"><span>Base de datos y usuarios</span></label><label><input type="checkbox" formControlName="payments"><span>Pagos online</span></label></fieldset>
       <div class="field"><label for="deadline">¿Cuándo te gustaría comenzar?</label><input id="deadline" formControlName="deadline" placeholder="Por ejemplo: octubre de 2026"></div>
       <div class="field"><label for="message">Proyecto *</label><textarea id="message" formControlName="message" rows="5" placeholder="Contame qué querés mejorar, quién lo va a usar y qué resultado esperás."></textarea><small *ngIf="contactForm.controls.message.touched && contactForm.controls.message.invalid">Contame un poco más (mínimo 20 caracteres).</small></div>
       <input class="honeypot" tabindex="-1" formControlName="website" autocomplete="off" aria-hidden="true">
@@ -138,6 +138,7 @@
 </main>
 
 <button class="terminal-trigger" type="button" (click)="terminalOpen = true" aria-label="Abrir terminal interactiva"><span>&gt;_</span> TERMINAL</button>
+<aside class="tour-guide" *ngIf="tourActive" aria-live="polite"><div><span>TOUR 0{{ tourStep + 1 }} / 0{{ tour.length }}</span><button (click)="tourActive = false" aria-label="Cerrar recorrido">×</button></div><strong>{{ tour[tourStep].title }}</strong><button class="primary" (click)="nextTour()">{{ tourStep === tour.length - 1 ? 'Finalizar' : 'Siguiente' }} <span>→</span></button></aside>
 <div class="terminal-backdrop" *ngIf="terminalOpen" (click)="terminalOpen = false">
   <section class="terminal" role="dialog" aria-modal="true" aria-label="Terminal de Franco" (click)="$event.stopPropagation()">
     <header><span><i></i><i></i><i></i></span><b>franco&#64;portfolio:~</b><button (click)="terminalOpen = false" aria-label="Cerrar terminal">×</button></header>
