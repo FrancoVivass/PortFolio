@@ -1,14 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Meta, Title } from '@angular/platform-browser';
 
 type Project = { name: string; eyebrow: string; description: string; result: string; tech: string[]; status: string; repo?: string; live?: string };
 
 @Component({ selector: 'app-home', standalone: true, imports: [CommonModule, ReactiveFormsModule], templateUrl: './home.component.html', styleUrl: './home.component.scss' })
-export class HomeComponent {
+export class HomeComponent implements AfterViewInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
+  private readonly host = inject(ElementRef<HTMLElement>);
+  private bootTimer?: ReturnType<typeof setTimeout>;
   menuOpen = false; scrolled = false; sending = false; sent = false; submitError = ''; estimate = 250000;
+  booting = true; terminalOpen = false; audience: 'client' | 'recruiter' = 'client'; progress = 0;
   readonly projects: Project[] = [
     { name: 'AS Academic System', eyebrow: 'Proyecto final · 2025—2026', description: 'Una plataforma académica integral para reemplazar planillas, registros manuales y procesos duplicados.', result: 'Centraliza alumnos, docentes, cursos, notas, asistencia, correlatividades, eventos, reportes y permisos por rol.', tech: ['Angular', 'Supabase', 'PostgreSQL', 'Cloudflare'], status: 'Versión funcional terminada', repo: 'https://github.com/FrancoVivass/AS-Academic-System' },
     { name: 'Vestia', eyebrow: 'Producto propio · 2026', description: 'Gestión comercial pensada para locales de indumentaria, desde una única operación hasta múltiples comercios.', result: 'Organiza stock, ventas, propietarios, códigos de barras, impresión, cobros y administración desde un solo lugar.', tech: ['Angular', 'Supabase', 'Tailwind', 'PostgreSQL'], status: 'En desarrollo', repo: 'https://github.com/FrancoVivass/Vestia' },
@@ -35,9 +38,16 @@ export class HomeComponent {
   ];
   readonly contactForm = this.fb.group({ name: ['', [Validators.required, Validators.minLength(2)]], company: [''], email: ['', [Validators.required, Validators.email]], phone: [''], service: ['landing', Validators.required], budget: ['$250.000—$500.000 ARS'], deadline: [''], message: ['', [Validators.required, Validators.minLength(20)]], website: [''] });
   constructor(title: Title, meta: Meta) { title.setTitle('Franco Vivas — Analista de Sistemas y Desarrollador Full-Stack'); meta.updateTag({ name: 'description', content: 'Desarrollo páginas web, sistemas de gestión y aplicaciones a medida para transformar procesos reales en soluciones simples.' }); }
-  @HostListener('window:scroll') onScroll(): void { this.scrolled = window.scrollY > 24; }
+  ngAfterViewInit(): void { this.bootTimer = setTimeout(() => this.booting = false, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1900); }
+  ngOnDestroy(): void { if (this.bootTimer) clearTimeout(this.bootTimer); }
+  @HostListener('window:scroll') onScroll(): void { this.scrolled = window.scrollY > 24; const max = document.documentElement.scrollHeight - innerHeight; this.progress = max > 0 ? Math.min(100, (scrollY / max) * 100) : 0; }
+  @HostListener('document:mousemove', ['$event']) onPointerMove(event: MouseEvent): void { this.host.nativeElement.style.setProperty('--pointer-x', `${event.clientX}px`); this.host.nativeElement.style.setProperty('--pointer-y', `${event.clientY}px`); }
+  @HostListener('document:keydown.escape') closeTerminal(): void { this.terminalOpen = false; }
   updateEstimate(): void { this.estimate = this.services.find(item => item.value === this.contactForm.value.service)?.price ?? 250000; }
   scrollTo(id: string): void { this.menuOpen = false; document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); }
+  selectAudience(value: 'client' | 'recruiter'): void { this.audience = value; if (value === 'recruiter') this.scrollTo('perfil'); }
+  tilt(event: MouseEvent): void { const card = event.currentTarget as HTMLElement; const rect = card.getBoundingClientRect(); const x = ((event.clientX - rect.left) / rect.width - .5) * 5; const y = ((event.clientY - rect.top) / rect.height - .5) * -5; card.style.setProperty('--rx', `${y}deg`); card.style.setProperty('--ry', `${x}deg`); }
+  resetTilt(event: MouseEvent): void { const card = event.currentTarget as HTMLElement; card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); }
   whatsappLink(): string { const value = this.contactForm.getRawValue(); const service = this.services.find(item => item.value === value.service)?.title ?? 'un proyecto'; const message = `Hola Franco, soy ${value.name || '...'}${value.company ? ` de ${value.company}` : ''}. Quiero consultar por ${service}. Presupuesto estimado: ${value.budget || 'a definir'}. ${value.message || ''}`; return `https://wa.me/542245421367?text=${encodeURIComponent(message)}`; }
   async submit(): Promise<void> { this.contactForm.markAllAsTouched(); if (this.contactForm.invalid || this.contactForm.value.website) return; this.sending = true; this.submitError = ''; try { const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(this.contactForm.getRawValue()) }); if (!response.ok) throw new Error(); this.sent = true; this.contactForm.reset({ service: 'landing', budget: '$250.000—$500.000 ARS' }); } catch { this.submitError = 'El envío por email todavía no está disponible. Podés continuar por WhatsApp.'; } finally { this.sending = false; } }
 }

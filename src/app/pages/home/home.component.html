@@ -1,3 +1,8 @@
+<div class="boot" [class.done]="!booting" aria-hidden="true">
+  <div class="boot-inner"><span>FV / PORTFOLIO</span><div class="boot-log"><p>Analizando problema</p><p>Diseñando solución</p><p>Desplegando experiencia</p></div><div class="boot-bar"><i></i></div><b>SYSTEM READY</b></div>
+</div>
+<div class="ambient" aria-hidden="true"></div>
+<div class="page-progress" aria-hidden="true"><i [style.height.%]="progress"></i></div>
 <header class="nav" [class.scrolled]="scrolled">
   <a class="brand" href="#inicio" aria-label="Franco Vivas, inicio"><span>FV</span> Franco Vivas</a>
   <button class="menu" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-label="Abrir menú"><i></i><i></i></button>
@@ -12,8 +17,10 @@
     <div class="glow"></div>
     <div class="hero-copy">
       <p class="kicker"><span></span> Disponible para proyectos seleccionados</p>
+      <div class="audience-switch" aria-label="Elegir objetivo"><button [class.active]="audience === 'client'" (click)="selectAudience('client')">Necesito una solución</button><button [class.active]="audience === 'recruiter'" (click)="selectAudience('recruiter')">Quiero contratarte</button></div>
       <h1>Diseño sistemas que hacen el trabajo <em>más simple.</em></h1>
-      <p class="lead">Analizo problemas reales y los convierto en aplicaciones web claras, rápidas y preparadas para crecer.</p>
+      <p class="lead" *ngIf="audience === 'client'">Analizo problemas reales y los convierto en aplicaciones web claras, rápidas y preparadas para crecer.</p>
+      <p class="lead" *ngIf="audience === 'recruiter'">Analista de Sistemas Full-Stack con foco en Angular, Supabase y productos que conectan operación, usuarios y datos.</p>
       <div class="hero-actions">
         <button class="primary" (click)="scrollTo('contacto')">Solicitar presupuesto <span>↗</span></button>
         <button class="text-link" (click)="scrollTo('proyectos')">Explorar proyectos <span>↓</span></button>
@@ -36,7 +43,7 @@
   <section class="projects section" id="proyectos">
     <div class="section-heading"><div><p class="kicker">01 / Trabajo seleccionado</p><h2>Proyectos con un problema real detrás.</h2></div><p>Casos académicos y productos propios donde combiné análisis, diseño, datos y desarrollo.</p></div>
     <div class="project-grid">
-      <article *ngFor="let project of projects; let i = index" class="project" [class.featured]="i < 2">
+      <article *ngFor="let project of projects; let i = index" class="project" [class.featured]="i < 2" (mousemove)="tilt($event)" (mouseleave)="resetTilt($event)">
         <div class="project-number">0{{ i + 1 }}</div>
         <div class="project-body"><p class="eyebrow">{{ project.eyebrow }}</p><h3>{{ project.name }}</h3><p class="description">{{ project.description }}</p><p class="result"><b>Impacto</b>{{ project.result }}</p>
           <div class="tags"><span *ngFor="let tech of project.tech">{{ tech }}</span></div>
@@ -100,5 +107,13 @@
     </form>
   </section>
 </main>
+
+<button class="terminal-trigger" type="button" (click)="terminalOpen = true" aria-label="Abrir terminal interactiva"><span>&gt;_</span> TERMINAL</button>
+<div class="terminal-backdrop" *ngIf="terminalOpen" (click)="terminalOpen = false">
+  <section class="terminal" role="dialog" aria-modal="true" aria-label="Terminal de Franco" (click)="$event.stopPropagation()">
+    <header><span><i></i><i></i><i></i></span><b>franco&#64;portfolio:~</b><button (click)="terminalOpen = false" aria-label="Cerrar terminal">×</button></header>
+    <div class="terminal-body"><p class="command">$ whoami</p><p>Franco Vivas — Analista de Sistemas / Full-Stack Developer</p><p class="command">$ stack --primary</p><p>Angular · TypeScript · Supabase · PostgreSQL · REST APIs</p><p class="command">$ status</p><p><span class="green">●</span> Disponible para proyectos seleccionados</p><p class="command">$ location</p><p>Dolores, Buenos Aires, Argentina · Trabajo remoto</p><div class="terminal-links"><button (click)="terminalOpen = false; scrollTo('proyectos')">projects</button><button (click)="terminalOpen = false; scrollTo('perfil')">about</button><button (click)="terminalOpen = false; scrollTo('contacto')">contact</button></div><p class="prompt">$ <i></i></p></div>
+  </section>
+</div>
 
 <footer><a class="brand" href="#inicio"><span>FV</span> Franco Vivas</a><p>Analista de Sistemas · Full-Stack Developer</p><p>© 2026 · Dolores, Argentina</p></footer>
