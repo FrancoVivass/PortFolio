@@ -48,7 +48,7 @@
         <div class="project-body"><p class="eyebrow">{{ project.eyebrow }}</p><h3>{{ project.name }}</h3><p class="description">{{ project.description }}</p><p class="result"><b>Impacto</b>{{ project.result }}</p>
           <div class="tags"><span *ngFor="let tech of project.tech">{{ tech }}</span></div>
         </div>
-        <div class="project-foot"><span>{{ project.status }}</span><div><a *ngIf="project.live" [href]="project.live" target="_blank" rel="noopener">Abrir demo ↗</a><a *ngIf="project.repo" [href]="project.repo" target="_blank" rel="noopener">Ver código ↗</a></div></div>
+        <div class="project-foot"><span>{{ project.status }}</span><div><button (click)="selectedProject = project">Caso de estudio</button><a *ngIf="project.live" [href]="project.live" target="_blank" rel="noopener">Demo ↗</a><a *ngIf="project.repo" [href]="project.repo" target="_blank" rel="noopener">Código ↗</a></div></div>
       </article>
     </div>
     <a class="github-link" href="https://github.com/FrancoVivass" target="_blank" rel="noopener">Ver los 21 repositorios públicos en GitHub <span>↗</span></a>
@@ -72,8 +72,13 @@
     </div>
   </section>
 
+  <section class="process section" id="proceso">
+    <div class="section-heading"><div><p class="kicker">03 / Cómo trabajo</p><h2>De una necesidad a un sistema operativo.</h2></div><p>Cada etapa reduce incertidumbre antes de sumar complejidad.</p></div>
+    <div class="process-line"><article *ngFor="let step of ['Problema','Análisis','Diseño','Desarrollo','Pruebas','Publicación']; let i = index"><span>0{{ i + 1 }}</span><i></i><h3>{{ step }}</h3><p>{{ ['Entender el objetivo y a quién afecta.','Definir alcance, datos y prioridades.','Convertir el flujo en una interfaz clara.','Construir módulos pequeños y mantenibles.','Validar escenarios, errores y dispositivos.','Medir, documentar y seguir mejorando.'][i] }}</p></article></div>
+  </section>
+
   <section class="services section" id="servicios">
-    <div class="section-heading"><div><p class="kicker">03 / Servicios y valores</p><h2>Alcances claros desde el comienzo.</h2></div><p>Valores orientativos para proyectos en Argentina. Se actualizan al confirmar el alcance; para clientes internacionales se cotiza en USD.</p></div>
+    <div class="section-heading"><div><p class="kicker">04 / Servicios y valores</p><h2>Alcances claros desde el comienzo.</h2></div><p>Valores orientativos para proyectos en Argentina. Se actualizan al confirmar el alcance; para clientes internacionales se cotiza en USD.</p></div>
     <div class="service-list">
       <article *ngFor="let service of services; let i = index" class="service-card">
         <span class="service-index">0{{ i + 1 }}</span><div><h3>{{ service.title }}</h3><p>{{ service.copy }}</p><small>{{ service.includes }}</small></div>
@@ -84,7 +89,7 @@
   </section>
 
   <section class="profile section" id="perfil">
-    <div class="profile-title"><p class="kicker">04 / Perfil</p><h2>Resolutivo.<br><span>Creativo.</span><br>Comprometido.</h2></div>
+    <div class="profile-title"><p class="kicker">05 / Perfil</p><h2>Resolutivo.<br><span>Creativo.</span><br>Comprometido.</h2></div>
     <div class="profile-copy">
       <p class="big">Soy Franco Vivas, Analista de Sistemas y desarrollador Full-Stack de Dolores, Buenos Aires.</p>
       <p>Me formé en el Instituto Francisco de Paula Robles y finalicé la carrera en agosto de 2026. Trabajo en productos digitales propios, proyectos académicos y soluciones independientes para organizaciones y comercios.</p>
@@ -101,12 +106,12 @@
   </section>
 
   <section class="faq section" id="preguntas">
-    <div class="section-heading"><div><p class="kicker">05 / Preguntas frecuentes</p><h2>Antes de empezar un proyecto.</h2></div><p>Respuestas directas sobre alcance, pagos, publicación y mantenimiento.</p></div>
+    <div class="section-heading"><div><p class="kicker">06 / Preguntas frecuentes</p><h2>Antes de empezar un proyecto.</h2></div><p>Respuestas directas sobre alcance, pagos, publicación y mantenimiento.</p></div>
     <div class="faq-list"><details *ngFor="let faq of faqs"><summary>{{ faq.question }}<span>+</span></summary><p>{{ faq.answer }}</p></details></div>
   </section>
 
   <section class="contact section" id="contacto">
-    <div class="contact-intro"><p class="kicker">06 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
+    <div class="contact-intro"><p class="kicker">07 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
       <div class="estimate"><small>Referencia para este tipo de proyecto</small><strong>Desde {{ estimate | currency:'ARS':'symbol-narrow':'1.0-0' }} ARS</strong><span>El presupuesto final se define después de conversar.</span></div>
       <div class="socials"><a href="mailto:francovivasa@gmail.com">Email ↗</a><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/franco-vivas-ab915628a" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://instagram.com/fran.vivas_ok" target="_blank" rel="noopener">Instagram ↗</a></div>
     </div>
@@ -117,6 +122,7 @@
       <div class="field half"><label for="phone">WhatsApp</label><input id="phone" formControlName="phone" autocomplete="tel" placeholder="Código de área + número"></div>
       <div class="field half"><label for="service">Servicio *</label><select id="service" formControlName="service" (change)="updateEstimate()"><option *ngFor="let service of services" [value]="service.value">{{ service.title }}</option></select></div>
       <div class="field half"><label for="budget">Presupuesto aproximado</label><select id="budget" formControlName="budget"><option>$250.000—$500.000 ARS</option><option>$500.000—$900.000 ARS</option><option>$900.000—$1.500.000 ARS</option><option>Más de $1.500.000 ARS</option><option>Necesito orientación</option></select></div>
+      <fieldset class="addons"><legend>¿Qué debería incluir?</legend><label><input type="checkbox" formControlName="admin" (change)="updateEstimate()"><span>Panel administrativo<small>+$180.000</small></span></label><label><input type="checkbox" formControlName="database" (change)="updateEstimate()"><span>Base de datos y usuarios<small>+$220.000</small></span></label><label><input type="checkbox" formControlName="payments" (change)="updateEstimate()"><span>Pagos online<small>+$160.000</small></span></label><label><input type="checkbox" formControlName="rush" (change)="updateEstimate()"><span>Entrega prioritaria<small>+25%</small></span></label></fieldset>
       <div class="field"><label for="deadline">¿Cuándo te gustaría comenzar?</label><input id="deadline" formControlName="deadline" placeholder="Por ejemplo: octubre de 2026"></div>
       <div class="field"><label for="message">Proyecto *</label><textarea id="message" formControlName="message" rows="5" placeholder="Contame qué querés mejorar, quién lo va a usar y qué resultado esperás."></textarea><small *ngIf="contactForm.controls.message.touched && contactForm.controls.message.invalid">Contame un poco más (mínimo 20 caracteres).</small></div>
       <input class="honeypot" tabindex="-1" formControlName="website" autocomplete="off" aria-hidden="true">
@@ -130,8 +136,12 @@
 <div class="terminal-backdrop" *ngIf="terminalOpen" (click)="terminalOpen = false">
   <section class="terminal" role="dialog" aria-modal="true" aria-label="Terminal de Franco" (click)="$event.stopPropagation()">
     <header><span><i></i><i></i><i></i></span><b>franco&#64;portfolio:~</b><button (click)="terminalOpen = false" aria-label="Cerrar terminal">×</button></header>
-    <div class="terminal-body"><p class="command">$ whoami</p><p>Franco Vivas — Analista de Sistemas / Full-Stack Developer</p><p class="command">$ stack --primary</p><p>Angular · TypeScript · Supabase · PostgreSQL · REST APIs</p><p class="command">$ status</p><p><span class="green">●</span> Disponible para proyectos seleccionados</p><p class="command">$ location</p><p>Dolores, Buenos Aires, Argentina · Trabajo remoto</p><div class="terminal-links"><button (click)="terminalOpen = false; scrollTo('proyectos')">projects</button><button (click)="terminalOpen = false; scrollTo('perfil')">about</button><button (click)="terminalOpen = false; scrollTo('contacto')">contact</button></div><p class="prompt">$ <i></i></p></div>
+    <div class="terminal-body"><p class="command">$ whoami</p><p>Franco Vivas — Analista de Sistemas / Full-Stack Developer</p><p *ngFor="let line of terminalOutput" [class.command]="line.startsWith('$')">{{ line }}</p><div class="terminal-links"><button (click)="terminalCommand = 'projects'; runCommand()">projects</button><button (click)="terminalCommand = 'about'; runCommand()">about</button><button (click)="terminalCommand = 'contact'; runCommand()">contact</button></div><form class="terminal-input" (ngSubmit)="runCommand()"><span>$</span><input [(ngModel)]="terminalCommand" name="terminalCommand" autocomplete="off" aria-label="Comando de terminal" autofocus><i></i></form></div>
   </section>
+</div>
+
+<div class="case-backdrop" *ngIf="selectedProject" (click)="selectedProject = null">
+  <article class="case-study" role="dialog" aria-modal="true" [attr.aria-label]="'Caso de estudio ' + selectedProject.name" (click)="$event.stopPropagation()"><button class="case-close" (click)="selectedProject = null" aria-label="Cerrar caso de estudio">×</button><p class="eyebrow">{{ selectedProject.eyebrow }}</p><h2>{{ selectedProject.name }}</h2><div class="case-columns"><div><small>EL DESAFÍO</small><p>{{ selectedProject.description }}</p></div><div><small>LA SOLUCIÓN</small><p>{{ selectedProject.result }}</p></div></div><div class="tags"><span *ngFor="let tech of selectedProject.tech">{{ tech }}</span></div><footer><span>{{ selectedProject.status }}</span><div><a *ngIf="selectedProject.live" [href]="selectedProject.live" target="_blank" rel="noopener">Abrir demo ↗</a><a *ngIf="selectedProject.repo" [href]="selectedProject.repo" target="_blank" rel="noopener">Ver repositorio ↗</a></div></footer></article>
 </div>
 
 <footer><a class="brand" href="#inicio"><span>FV</span> Franco Vivas</a><p>Analista de Sistemas · Full-Stack Developer</p><p>© 2026 · Dolores, Argentina</p></footer>
