@@ -54,8 +54,26 @@
     <a class="github-link" href="https://github.com/FrancoVivass" target="_blank" rel="noopener">Ver los 21 repositorios públicos en GitHub <span>↗</span></a>
   </section>
 
+  <section class="architecture section" id="arquitectura">
+    <div class="section-heading"><div><p class="kicker">02 / Bajo el capó</p><h2>Explorador de arquitectura.</h2></div><p>No se trata solo de cómo se ve: cada producto necesita una estructura coherente para crecer y mantenerse.</p></div>
+    <div class="architecture-shell">
+      <div class="architecture-tabs" role="tablist" aria-label="Elegir arquitectura">
+        <button *ngFor="let item of architectures; let i = index" role="tab" [attr.aria-selected]="architectureIndex === i" [class.active]="architectureIndex === i" (click)="architectureIndex = i"><span>0{{ i + 1 }}</span>{{ item.name }}</button>
+      </div>
+      <div class="architecture-view">
+        <div class="architecture-copy"><p class="eyebrow">{{ architectures[architectureIndex].type }}</p><h3>{{ architectures[architectureIndex].name }}</h3><p>{{ architectures[architectureIndex].summary }}</p><div class="data-flow"><span *ngFor="let step of architectures[architectureIndex].flow; let last = last">{{ step }}<i *ngIf="!last">→</i></span></div></div>
+        <div class="system-map" aria-label="Componentes principales del sistema">
+          <div class="map-core"><span>FV</span><small>SYSTEM</small></div>
+          <div *ngFor="let node of architectures[architectureIndex].nodes; let i = index" class="map-node" [ngClass]="'node-' + i"><b>{{ node.label }}</b><small>{{ node.detail }}</small></div>
+          <div class="map-orbit"></div>
+        </div>
+      </div>
+      <div class="architecture-status"><span><i></i> Architecture online</span><span>04 services connected</span><span>Responsive / secure / scalable</span></div>
+    </div>
+  </section>
+
   <section class="services section" id="servicios">
-    <div class="section-heading"><div><p class="kicker">02 / Servicios y valores</p><h2>Alcances claros desde el comienzo.</h2></div><p>Valores orientativos para proyectos en Argentina. Se actualizan al confirmar el alcance; para clientes internacionales se cotiza en USD.</p></div>
+    <div class="section-heading"><div><p class="kicker">03 / Servicios y valores</p><h2>Alcances claros desde el comienzo.</h2></div><p>Valores orientativos para proyectos en Argentina. Se actualizan al confirmar el alcance; para clientes internacionales se cotiza en USD.</p></div>
     <div class="service-list">
       <article *ngFor="let service of services; let i = index" class="service-card">
         <span class="service-index">0{{ i + 1 }}</span><div><h3>{{ service.title }}</h3><p>{{ service.copy }}</p><small>{{ service.includes }}</small></div>
@@ -66,7 +84,7 @@
   </section>
 
   <section class="profile section" id="perfil">
-    <div class="profile-title"><p class="kicker">03 / Perfil</p><h2>Resolutivo.<br><span>Creativo.</span><br>Comprometido.</h2></div>
+    <div class="profile-title"><p class="kicker">04 / Perfil</p><h2>Resolutivo.<br><span>Creativo.</span><br>Comprometido.</h2></div>
     <div class="profile-copy">
       <p class="big">Soy Franco Vivas, Analista de Sistemas y desarrollador Full-Stack de Dolores, Buenos Aires.</p>
       <p>Me formé en el Instituto Francisco de Paula Robles y finalicé la carrera en agosto de 2026. Trabajo en productos digitales propios, proyectos académicos y soluciones independientes para organizaciones y comercios.</p>
@@ -83,12 +101,12 @@
   </section>
 
   <section class="faq section" id="preguntas">
-    <div class="section-heading"><div><p class="kicker">04 / Preguntas frecuentes</p><h2>Antes de empezar un proyecto.</h2></div><p>Respuestas directas sobre alcance, pagos, publicación y mantenimiento.</p></div>
+    <div class="section-heading"><div><p class="kicker">05 / Preguntas frecuentes</p><h2>Antes de empezar un proyecto.</h2></div><p>Respuestas directas sobre alcance, pagos, publicación y mantenimiento.</p></div>
     <div class="faq-list"><details *ngFor="let faq of faqs"><summary>{{ faq.question }}<span>+</span></summary><p>{{ faq.answer }}</p></details></div>
   </section>
 
   <section class="contact section" id="contacto">
-    <div class="contact-intro"><p class="kicker">05 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
+    <div class="contact-intro"><p class="kicker">06 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
       <div class="estimate"><small>Referencia para este tipo de proyecto</small><strong>Desde {{ estimate | currency:'ARS':'symbol-narrow':'1.0-0' }} ARS</strong><span>El presupuesto final se define después de conversar.</span></div>
       <div class="socials"><a href="mailto:francovivasa@gmail.com">Email ↗</a><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/franco-vivas-ab915628a" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://instagram.com/fran.vivas_ok" target="_blank" rel="noopener">Instagram ↗</a></div>
     </div>
