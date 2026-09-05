@@ -24,7 +24,7 @@ export default async function handler(request, response) {
 
   const emailResponse = await fetch('https://api.resend.com/emails', {
     method: 'POST', headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: process.env.CONTACT_FROM_EMAIL, to: ['francovivasa@gmail.com'], reply_to: record.email, subject: `Nueva consulta: ${record.service} — ${record.name}`, text: `Nombre: ${record.name}\nEmpresa: ${record.company}\nEmail: ${record.email}\nWhatsApp: ${record.phone}\nServicio: ${record.service}\nPresupuesto: ${record.budget}\nFecha: ${record.deadline}\n\n${record.message}` })
+    body: JSON.stringify({ from: process.env.CONTACT_FROM_EMAIL, to: ['francovivasa@gmail.com'], reply_to: record.email, subject: `Nueva consulta: ${record.service} — ${record.name}`, text: `Nombre: ${record.name}\nEmpresa: ${record.company}\nEmail: ${record.email}\nWhatsApp: ${record.phone}\nServicio: ${record.service}\nFecha: ${record.deadline}\n\n${record.message}` })
   });
   if (!emailResponse.ok) return response.status(500).json({ error: 'La consulta se guardó, pero falló la notificación' });
   return response.status(200).json({ ok: true });

@@ -13,7 +13,7 @@
   </nav>
 </header>
 
-<main id="main">
+<main id="main" [class.easter-mode]="easterEgg">
   <section class="hero" id="inicio">
     <div class="glow"></div>
     <div class="hero-copy">
@@ -37,9 +37,43 @@
     <button class="scroll" (click)="scrollTo('proyectos')" aria-label="Ir a proyectos">SCROLL <span>↓</span></button>
   </section>
 
+  <aside class="recruiter-strip" id="recruiter" *ngIf="audience === 'recruiter'">
+    <div><small>DISPONIBILIDAD</small><strong>Abierto a oportunidades</strong></div><div><small>BASE</small><strong>Dolores · remoto</strong></div><div><small>STACK PRINCIPAL</small><strong>Angular · TypeScript · Supabase</strong></div><div><small>FORMACIÓN</small><strong>Analista de Sistemas · 2026</strong></div>
+    <button class="primary" (click)="printCV()">Ver / imprimir CV <span>↗</span></button>
+  </aside>
+
   <section class="statement">
     <p>Del análisis al producto final.</p>
     <h2>No desarrollo pantallas aisladas. Construyo soluciones que conectan <span>personas, procesos y datos.</span></h2>
+  </section>
+
+  <section class="lab section" id="laboratorio">
+    <div class="section-heading"><div><p class="kicker">03 / Probalo</p><h2>Un portfolio que también funciona.</h2></div><p>Estas micro experiencias muestran cómo pienso interfaces, estados y procesos reales. Todo ocurre en tu navegador.</p></div>
+    <div class="lab-tabs" role="tablist" aria-label="Demos interactivas">
+      <button [class.active]="labTab === 'academic'" (click)="labTab = 'academic'">Academic System</button><button [class.active]="labTab === 'vestia'" (click)="labTab = 'vestia'">Vestia POS</button><button [class.active]="labTab === 'builder'" (click)="labTab = 'builder'">Construí tu sistema</button><button [class.active]="labTab === 'stack'" (click)="labTab = 'stack'">Constelación tech</button>
+    </div>
+    <div class="lab-console">
+      <div *ngIf="labTab === 'academic'" class="academic-demo demo-grid">
+        <div class="demo-copy"><p class="eyebrow">AS / PANEL DOCENTE</p><h3>Asistencia y calificaciones sincronizadas.</h3><p>Probá cambiar el estado y la nota. Es una muestra compacta del flujo usado para evitar planillas duplicadas.</p><div class="demo-status"><i></i> Cambios guardados localmente</div></div>
+        <div class="student-list"><article *ngFor="let student of academicStudents"><div><span>{{ student.name.slice(0,1) }}</span><p><b>{{ student.name }}</b><small>{{ student.course }}</small></p></div><button [class.present]="student.present" (click)="student.present = !student.present">{{ student.present ? 'Presente' : 'Ausente' }}</button><label>Nota <input type="number" min="1" max="10" [(ngModel)]="student.grade"></label></article></div>
+      </div>
+      <div *ngIf="labTab === 'vestia'" class="vestia-demo demo-grid">
+        <div class="demo-copy"><p class="eyebrow">VESTIA / PUNTO DE VENTA</p><h3>Vendé una prenda. Mirá cómo responde el sistema.</h3><p>La operación actualiza venta y stock como lo haría el producto real.</p><button class="primary" (click)="registerSale()" [disabled]="vestiaStock === 0">Registrar venta <span>→</span></button></div>
+        <div class="pos-card"><div class="product-art"><span>V</span></div><div><small>SKU · REM-001</small><h4>Remera Essential</h4><p>Talle M · Negro</p></div><div class="pos-metrics"><p><span>Stock</span><strong>{{ vestiaStock }}</strong></p><p><span>Ventas de hoy</span><strong>{{ vestiaSales }}</strong></p></div><footer><i></i>{{ vestiaMessage }}</footer></div>
+      </div>
+      <div *ngIf="labTab === 'builder'" class="builder-demo demo-grid">
+        <div class="demo-copy"><p class="eyebrow">SYSTEM BUILDER</p><h3>Armá una primera versión de tu sistema.</h3><p>Elegí módulos. La consulta se genera con el alcance que seleccionaste, sin precios automáticos ni sorpresas.</p><a class="primary builder-send" [href]="builderWhatsapp()" target="_blank" rel="noopener">Consultar por WhatsApp <span>↗</span></a></div>
+        <div class="module-grid"><button *ngFor="let module of builderModules" [class.active]="module.active" (click)="module.active = !module.active"><span>{{ module.active ? '✓' : '+' }}</span>{{ module.name }}</button><div class="builder-output"><small>CONFIGURACIÓN ACTUAL</small><p>{{ selectedModulesCount }} módulos seleccionados</p></div></div>
+      </div>
+      <div *ngIf="labTab === 'stack'" class="stack-demo demo-grid">
+        <div class="tech-cloud"><button *ngFor="let tech of technologies; let i = index" [class.active]="activeTechnology === tech" [style.--i]="i" (click)="activeTechnology = tech">{{ tech.name }}</button><i class="constellation-core">FV</i></div>
+        <div class="demo-copy"><p class="eyebrow">TECNOLOGÍA → RESULTADO</p><h3>{{ activeTechnology.name }}</h3><p>Proyectos reales donde usé esta tecnología:</p><ul><li *ngFor="let project of activeTechnology.projects">{{ project }}</li></ul></div>
+      </div>
+    </div>
+    <div class="comparison">
+      <div class="comparison-copy"><p class="eyebrow">ANTES / DESPUÉS</p><h3>De una operación dispersa a un flujo claro.</h3><p>Mové el control para comparar el mismo proceso antes y después de digitalizarlo.</p><input type="range" min="12" max="88" [(ngModel)]="comparison" aria-label="Comparar antes y después"></div>
+      <div class="comparison-stage"><div class="before"><small>ANTES</small><span>Planillas</span><span>Mensajes sueltos</span><span>Datos repetidos</span><span>Sin trazabilidad</span></div><div class="after" [style.width.%]="100 - comparison"><small>DESPUÉS</small><span>Una sola fuente</span><span>Roles definidos</span><span>Reportes claros</span><span>Historial seguro</span></div><i [style.left.%]="comparison"></i></div>
+    </div>
   </section>
 
   <section class="github-pulse" aria-label="Actividad pública de GitHub">
@@ -79,12 +113,12 @@
   </section>
 
   <section class="process section" id="proceso">
-    <div class="section-heading"><div><p class="kicker">03 / Cómo trabajo</p><h2>De una necesidad a un sistema operativo.</h2></div><p>Cada etapa reduce incertidumbre antes de sumar complejidad.</p></div>
+    <div class="section-heading"><div><p class="kicker">04 / Cómo trabajo</p><h2>De una necesidad a un sistema operativo.</h2></div><p>Cada etapa reduce incertidumbre antes de sumar complejidad.</p></div>
     <div class="process-line"><article *ngFor="let step of ['Problema','Análisis','Diseño','Desarrollo','Pruebas','Publicación']; let i = index"><span>0{{ i + 1 }}</span><i></i><h3>{{ step }}</h3><p>{{ ['Entender el objetivo y a quién afecta.','Definir alcance, datos y prioridades.','Convertir el flujo en una interfaz clara.','Construir módulos pequeños y mantenibles.','Validar escenarios, errores y dispositivos.','Medir, documentar y seguir mejorando.'][i] }}</p></article></div>
   </section>
 
   <section class="services section" id="servicios">
-    <div class="section-heading"><div><p class="kicker">04 / Servicios</p><h2>Soluciones pensadas para cada necesidad.</h2></div><p>El presupuesto se prepara después de conocer el objetivo, el alcance y las integraciones necesarias.</p></div>
+    <div class="section-heading"><div><p class="kicker">05 / Servicios</p><h2>Soluciones pensadas para cada necesidad.</h2></div><p>El presupuesto se prepara después de conocer el objetivo, el alcance y las integraciones necesarias.</p></div>
     <div class="service-list">
       <article *ngFor="let service of services; let i = index" class="service-card">
         <span class="service-index">0{{ i + 1 }}</span><div><h3>{{ service.title }}</h3><p>{{ service.copy }}</p><small>{{ service.includes }}</small></div>
@@ -95,7 +129,7 @@
   </section>
 
   <section class="profile section" id="perfil">
-    <div class="profile-title"><p class="kicker">05 / Perfil</p><h2>Resolutivo.<br><span>Creativo.</span><br>Comprometido.</h2></div>
+    <div class="profile-title"><p class="kicker">06 / Perfil</p><h2>Resolutivo.<br><span>Creativo.</span><br>Comprometido.</h2></div>
     <div class="profile-copy">
       <p class="big">Soy Franco Vivas, Analista de Sistemas y desarrollador Full-Stack de Dolores, Buenos Aires.</p>
       <p>Me formé en el Instituto Francisco de Paula Robles y finalicé la carrera en agosto de 2026. Trabajo en productos digitales propios, proyectos académicos y soluciones independientes para organizaciones y comercios.</p>
@@ -112,12 +146,12 @@
   </section>
 
   <section class="faq section" id="preguntas">
-    <div class="section-heading"><div><p class="kicker">06 / Preguntas frecuentes</p><h2>Antes de empezar un proyecto.</h2></div><p>Respuestas directas sobre alcance, pagos, publicación y mantenimiento.</p></div>
+    <div class="section-heading"><div><p class="kicker">07 / Preguntas frecuentes</p><h2>Antes de empezar un proyecto.</h2></div><p>Respuestas directas sobre alcance, pagos, publicación y mantenimiento.</p></div>
     <div class="faq-list"><details *ngFor="let faq of faqs"><summary>{{ faq.question }}<span>+</span></summary><p>{{ faq.answer }}</p></details></div>
   </section>
 
   <section class="contact section" id="contacto">
-    <div class="contact-intro"><p class="kicker">07 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
+    <div class="contact-intro"><p class="kicker">08 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
       <div class="estimate"><small>Presupuesto personalizado</small><strong>Contame tu idea</strong><span>La primera consulta es gratuita y podés continuar directamente por WhatsApp.</span></div>
       <div class="socials"><a href="mailto:francovivasa@gmail.com">Email ↗</a><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/franco-vivas-ab915628a" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://instagram.com/fran.vivas_ok" target="_blank" rel="noopener">Instagram ↗</a></div>
     </div>
@@ -145,6 +179,11 @@
     <div class="terminal-body"><p class="command">$ whoami</p><p>Franco Vivas — Analista de Sistemas / Full-Stack Developer</p><p *ngFor="let line of terminalOutput" [class.command]="line.startsWith('$')">{{ line }}</p><div class="terminal-links"><button (click)="terminalCommand = 'projects'; runCommand()">projects</button><button (click)="terminalCommand = 'about'; runCommand()">about</button><button (click)="terminalCommand = 'contact'; runCommand()">contact</button></div><form class="terminal-input" (ngSubmit)="runCommand()"><span>$</span><input [(ngModel)]="terminalCommand" name="terminalCommand" autocomplete="off" aria-label="Comando de terminal" autofocus><i></i></form></div>
   </section>
 </div>
+
+<section class="cv-sheet" aria-label="Currículum de Franco Vivas">
+  <header><div><p>FRANCO VIVAS</p><h1>Analista de Sistemas<br>Full-Stack Developer</h1></div><span>Dolores, Buenos Aires · francovivasa&#64;gmail.com<br>github.com/FrancoVivass · linkedin.com/in/franco-vivas-ab915628a</span></header>
+  <main><section><h2>Perfil</h2><p>Analista de Sistemas orientado al desarrollo de aplicaciones web, sistemas de gestión y productos digitales que conectan personas, procesos y datos.</p><h2>Experiencia</h2><h3>Secretaría de Seguridad / Centro de Operaciones y Monitoreo · 2026</h3><p>Instalación, configuración y mantenimiento de videovigilancia, DVR, redes y acceso remoto.</p><h3>Desarrollo independiente · Actualidad</h3><p>Análisis y construcción de páginas, sistemas de gestión y productos web.</p></section><aside><h2>Tecnologías</h2><p>Angular · TypeScript · Supabase · PostgreSQL · REST APIs · Git · Cloudflare · Vercel</p><h2>Proyectos</h2><p>AS Academic System<br>Vestia<br>Retake<br>Centro Universitario<br>Manijeada<br>Simulaciones Monte Carlo</p><h2>Formación</h2><p>Analista de Sistemas<br>Instituto Francisco de Paula Robles · Agosto 2026</p></aside></main>
+</section>
 
 <div class="case-backdrop" *ngIf="selectedProject" (click)="selectedProject = null">
   <article class="case-study" role="dialog" aria-modal="true" [attr.aria-label]="'Caso de estudio ' + selectedProject.name" (click)="$event.stopPropagation()"><button class="case-close" (click)="selectedProject = null" aria-label="Cerrar caso de estudio">×</button><p class="eyebrow">{{ selectedProject.eyebrow }}</p><h2>{{ selectedProject.name }}</h2><div class="case-columns"><div><small>EL DESAFÍO</small><p>{{ selectedProject.description }}</p></div><div><small>LA SOLUCIÓN</small><p>{{ selectedProject.result }}</p></div></div><div class="tags"><span *ngFor="let tech of selectedProject.tech">{{ tech }}</span></div><footer><span>{{ selectedProject.status }}</span><div><a *ngIf="selectedProject.live" [href]="selectedProject.live" target="_blank" rel="noopener">Abrir demo ↗</a><a *ngIf="selectedProject.repo" [href]="selectedProject.repo" target="_blank" rel="noopener">Ver repositorio ↗</a></div></footer></article>
