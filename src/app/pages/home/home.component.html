@@ -2,6 +2,7 @@
   <div class="boot-inner"><span>FV / PORTFOLIO</span><div class="boot-log"><p>Analizando problema</p><p>Diseñando solución</p><p>Desplegando experiencia</p></div><div class="boot-bar"><i></i></div><b>SYSTEM READY</b></div>
 </div>
 <div class="ambient" aria-hidden="true"></div>
+<div class="cursor-orbit" aria-hidden="true"><i></i></div>
 <div class="page-progress" aria-hidden="true"><i [style.height.%]="progress"></i></div>
 <header class="nav" [class.scrolled]="scrolled">
   <a class="brand" href="#inicio" aria-label="Franco Vivas, inicio"><span>FV</span> Franco Vivas</a>
@@ -38,6 +39,10 @@
   <section class="statement">
     <p>Del análisis al producto final.</p>
     <h2>No desarrollo pantallas aisladas. Construyo soluciones que conectan <span>personas, procesos y datos.</span></h2>
+  </section>
+
+  <section class="github-pulse" aria-label="Actividad pública de GitHub">
+    <div><span>GITHUB / LIVE DATA</span><i [class.online]="github.loaded"></i></div><strong>{{ github.repos }}</strong><p>repositorios públicos</p><strong>{{ github.languages }}</strong><p>lenguajes principales</p><strong class="latest">{{ github.latest }}</strong><p>último repositorio actualizado</p><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">Abrir perfil ↗</a>
   </section>
 
   <section class="projects section" id="proyectos">
