@@ -14,6 +14,7 @@
 </header>
 
 <main id="main" [class.easter-mode]="easterEgg">
+  <button class="command-launch" (click)="paletteOpen = true">Buscar <kbd>Ctrl K</kbd></button>
   <section class="hero" id="inicio">
     <div class="glow"></div>
     <div class="hero-copy">
@@ -25,11 +26,13 @@
       <div class="hero-actions">
         <button class="primary" (click)="scrollTo('contacto')">Solicitar presupuesto <span>↗</span></button>
         <button class="text-link" (click)="scrollTo('proyectos')">Explorar proyectos <span>↓</span></button>
+        <button class="text-link" (click)="scrollTo('explorar')">Modo explorar ✦</button>
         <button class="text-link tour-start" (click)="startTour()">Tour interactivo <span>▶</span></button>
       </div>
       <div class="hero-meta"><span>Analista de Sistemas</span><span>Full-Stack Developer</span><span>Dolores, Argentina</span></div>
     </div>
-    <div class="hero-system" aria-hidden="true">
+    <div class="hero-system spatial-scene" (pointermove)="rotateScene($event)" (pointerleave)="sceneAngle = 0" [style.--scene-angle]="sceneAngle + 'deg'">
+      <div class="spatial-rings" aria-hidden="true"><i></i><i></i><i></i><b>FV</b></div>
       <div class="system-top"><span>FRANCO / SYSTEMS</span><b>ONLINE</b></div>
       <div class="orbit"><div class="core">FV<small>BUILD 26</small></div><i class="node n1"></i><i class="node n2"></i><i class="node n3"></i></div>
       <div class="system-bottom"><span>DESIGN</span><span>DEVELOP</span><span>DEPLOY</span></div>
@@ -42,25 +45,36 @@
     <button class="primary" (click)="printCV()">Ver / imprimir CV <span>↗</span></button>
   </aside>
 
+  <app-explore [projects]="projects" (openProject)="openProjectByName($event)"></app-explore>
+  <section class="playground section" id="playground">
+    <p class="kicker">Creative playground / Tocá, cambiá, descubrí</p><h2>¿Y si lo diseñás vos?</h2><p class="play-intro">Experimentá con una interfaz, ejecutá un flujo y encontrá el proyecto que se parece a tu idea.</p>
+    <div class="play-grid">
+      <article class="play-card"><header><span>01 / Diseño en vivo</span><h3>Tu estilo. Al instante.</h3></header><div class="design-controls"><label>Color <input type="color" [(ngModel)]="previewColor"></label><label>Bordes <input type="range" min="0" max="40" [(ngModel)]="previewRadius"></label><label>Tipografía <select [(ngModel)]="previewFont"><option value="sans-serif">Moderna</option><option value="serif">Editorial</option><option value="monospace">Developer</option></select></label></div><div class="live-design" [style.border-radius.px]="previewRadius" [style.font-family]="previewFont" [style.--preview]="previewColor"><small>ESTUDIO / TU MARCA</small><h3>Las buenas ideas<br>merecen una web.</h3><p>Una experiencia hecha a tu medida.</p><a [href]="builderWhatsapp()" target="_blank" rel="noopener" [style.border-radius.px]="previewRadius">Quiero algo así ↗</a></div><button class="text-link" (click)="previewColor = '#a855f7'; previewRadius = 18; previewFont = 'sans-serif'">Restablecer diseño ↻</button></article>
+      <article class="play-card"><header><span>02 / Automatizaciones</span><h3>Una consulta. Todo conectado.</h3></header><p>Simulación ilustrativa: no envía mensajes ni registra datos reales.</p><ol class="automation-flow"><li *ngFor="let step of ['Llega una consulta', 'Se organiza en el sistema', 'Se prepara una notificación', 'Listo para responder']; let i = index" [class.complete]="automationStep >= i"><span>{{ automationStep >= i ? '✓' : '0' + (i + 1) }}</span>{{ step }}</li></ol><button class="primary" (click)="runAutomation()" [disabled]="automationStep >= 0 && automationStep < 3">{{ automationStep === 3 ? 'Volver a ejecutar' : 'Simular recorrido' }} →</button><p aria-live="polite">{{ automationStep === 3 ? 'Flujo completo: la consulta ya tiene un recorrido claro.' : automationStep >= 0 ? 'Procesando la simulación…' : 'Presioná el botón para seguir el recorrido.' }}</p></article>
+      <article class="play-card"><header><span>03 / Explorador de interfaz</span><h3>Descubrí las decisiones.</h3></header><div class="inspect-preview"><button *ngFor="let part of inspectParts; let i = index" (click)="inspectorPart = i" [class.selected]="inspectorPart === i">{{ part.name }} <span>⊕</span></button></div><div class="inspect-note" aria-live="polite"><b>{{ inspectParts[inspectorPart].name }}</b><p>{{ inspectParts[inspectorPart].detail }}</p></div></article>
+      <article class="play-card"><header><span>04 / Tu recorrido</span><h3>¿Qué te trae por acá?</h3></header><div class="route-options"><button *ngFor="let route of ['Todos', 'Comercio', 'Web', 'Busco developer']" [class.selected]="visitorRoute === route" (click)="visitorRoute = route" [attr.aria-pressed]="visitorRoute === route">{{ route }}</button></div><div class="route-results"><button *ngFor="let project of routeProjects" (click)="openProjectCard(project)"><span>{{ project.name }}</span> ↗</button></div><button class="primary" (click)="surpriseProject()">Sorprendeme ✦</button></article>
+    </div>
+  </section>
   <section class="statement">
     <p>Del análisis al producto final.</p>
     <h2>No desarrollo pantallas aisladas. Construyo soluciones que conectan <span>personas, procesos y datos.</span></h2>
   </section>
 
+  <section class="creation-journey section" aria-label="De idea a producto">
+    <p class="kicker">Una idea. Muchas decisiones.</p><h2>Así toma forma un producto.</h2>
+    <div class="journey-controls"><button *ngFor="let step of journey; let i = index" (click)="journeyStep = i" [class.active]="journeyStep === i" [attr.aria-pressed]="journeyStep === i">0{{ i + 1 }} / {{ step }}</button></div>
+    <div class="journey-canvas" [attr.data-step]="journeyStep"><div class="journey-block" *ngFor="let label of ['Personas', 'Procesos', 'Datos', 'Experiencia']; let i = index" [style.--block]="i"><span>{{ label }}</span><i></i><i></i><i></i></div><strong>{{ ['¿Qué podemos resolver?', 'Conectar las piezas.', 'Hacerlo simple.', 'Listo para funcionar.'][journeyStep] }}</strong></div>
+    <p>{{ ['Todo empieza por entender una necesidad.', 'Defino el recorrido y cómo se relacionan los datos.', 'La estructura se convierte en una interfaz clara.', 'Los módulos trabajan juntos para resolver el problema.'][journeyStep] }}</p>
+  </section>
+
+  <section class="connection-game section" aria-label="Desafío de conexiones"><div><p class="kicker">Mini desafío / 20 segundos</p><h2>Conectá el sistema.</h2><p>¿Qué recorrido hace una consulta desde la pantalla hasta los datos? Elegí los módulos en orden.</p></div><div><div class="connection-buttons"><button *ngFor="let module of ['Base de datos', 'Interfaz', 'API']" (click)="connectModule(module)" [class.connected]="challenge.indexOf(module) < challengeStep" [disabled]="challenge.indexOf(module) < challengeStep">{{ module }} <span>{{ challenge.indexOf(module) < challengeStep ? '✓' : '+' }}</span></button></div><progress [value]="challengeStep" max="3" aria-label="Conexiones completadas"></progress><p aria-live="polite">{{ challengeMessage }}</p><button class="text-link" (click)="challengeStep = 0; challengeMessage = 'Conectá primero la interfaz.'">Reiniciar ↻</button></div></section>
+
   <section class="lab section" id="laboratorio">
     <div class="section-heading"><div><p class="kicker">03 / Probalo</p><h2>Un portfolio que también funciona.</h2></div><p>Estas micro experiencias muestran cómo pienso interfaces, estados y procesos reales. Todo ocurre en tu navegador.</p></div>
-    <div class="lab-tabs" role="tablist" aria-label="Demos interactivas">
-      <button [class.active]="labTab === 'academic'" (click)="labTab = 'academic'">Academic System</button><button [class.active]="labTab === 'vestia'" (click)="labTab = 'vestia'">Vestia POS</button><button [class.active]="labTab === 'builder'" (click)="labTab = 'builder'">Construí tu sistema</button><button [class.active]="labTab === 'stack'" (click)="labTab = 'stack'">Constelación tech</button>
+    <div class="lab-tabs" aria-label="Herramientas interactivas">
+      <button [class.active]="labTab === 'builder'" (click)="labTab = 'builder'">Construí tu sistema</button><button [class.active]="labTab === 'stack'" (click)="labTab = 'stack'">Constelación tech</button>
     </div>
     <div class="lab-console">
-      <div *ngIf="labTab === 'academic'" class="academic-demo demo-grid">
-        <div class="demo-copy"><p class="eyebrow">AS / PANEL DOCENTE</p><h3>Asistencia y calificaciones sincronizadas.</h3><p>Probá cambiar el estado y la nota. Es una muestra compacta del flujo usado para evitar planillas duplicadas.</p><div class="demo-status"><i></i> Cambios guardados localmente</div></div>
-        <div class="student-list"><article *ngFor="let student of academicStudents"><div><span>{{ student.name.slice(0,1) }}</span><p><b>{{ student.name }}</b><small>{{ student.course }}</small></p></div><button [class.present]="student.present" (click)="student.present = !student.present">{{ student.present ? 'Presente' : 'Ausente' }}</button><label>Nota <input type="number" min="1" max="10" [(ngModel)]="student.grade"></label></article></div>
-      </div>
-      <div *ngIf="labTab === 'vestia'" class="vestia-demo demo-grid">
-        <div class="demo-copy"><p class="eyebrow">VESTIA / PUNTO DE VENTA</p><h3>Vendé una prenda. Mirá cómo responde el sistema.</h3><p>La operación actualiza venta y stock como lo haría el producto real.</p><button class="primary" (click)="registerSale()" [disabled]="vestiaStock === 0">Registrar venta <span>→</span></button></div>
-        <div class="pos-card"><div class="product-art"><span>V</span></div><div><small>SKU · REM-001</small><h4>Remera Essential</h4><p>Talle M · Negro</p></div><div class="pos-metrics"><p><span>Stock</span><strong>{{ vestiaStock }}</strong></p><p><span>Ventas de hoy</span><strong>{{ vestiaSales }}</strong></p></div><footer><i></i>{{ vestiaMessage }}</footer></div>
-      </div>
       <div *ngIf="labTab === 'builder'" class="builder-demo demo-grid">
         <div class="demo-copy"><p class="eyebrow">SYSTEM BUILDER</p><h3>Armá una primera versión de tu sistema.</h3><p>Elegí módulos. La consulta se genera con el alcance que seleccionaste, sin precios automáticos ni sorpresas.</p><a class="primary builder-send" [href]="builderWhatsapp()" target="_blank" rel="noopener">Consultar por WhatsApp <span>↗</span></a></div>
         <div class="module-grid"><button *ngFor="let module of builderModules" [class.active]="module.active" (click)="module.active = !module.active"><span>{{ module.active ? '✓' : '+' }}</span>{{ module.name }}</button><div class="builder-output"><small>CONFIGURACIÓN ACTUAL</small><p>{{ selectedModulesCount }} módulos seleccionados</p></div></div>
@@ -83,12 +97,12 @@
   <section class="projects section" id="proyectos">
     <div class="section-heading"><div><p class="kicker">01 / Trabajo seleccionado</p><h2>Proyectos con un problema real detrás.</h2></div><p>Casos académicos y productos propios donde combiné análisis, diseño, datos y desarrollo.</p></div>
     <div class="project-grid">
-      <article *ngFor="let project of projects; let i = index" class="project" [class.featured]="i < 2" (mousemove)="tilt($event)" (mouseleave)="resetTilt($event)">
+      <article *ngFor="let project of projects; let i = index" class="project" [class.featured]="i < 2" [style.view-transition-name]="selectedProject === project ? 'none' : 'project-' + i" (mousemove)="tilt($event)" (mouseleave)="resetTilt($event)">
         <div class="project-number">0{{ i + 1 }}</div>
         <div class="project-body"><p class="eyebrow">{{ project.eyebrow }}</p><h3>{{ project.name }}</h3><p class="description">{{ project.description }}</p><p class="result"><b>Impacto</b>{{ project.result }}</p>
           <div class="tags"><span *ngFor="let tech of project.tech">{{ tech }}</span></div>
         </div>
-        <div class="project-foot"><span>{{ project.status }}</span><div><button (click)="selectedProject = project">Caso de estudio</button><a *ngIf="project.live" [href]="project.live" target="_blank" rel="noopener">Demo ↗</a><a *ngIf="project.repo" [href]="project.repo" target="_blank" rel="noopener">Código ↗</a></div></div>
+        <div class="project-foot"><span>{{ project.status }}</span><div><button (click)="openProjectCard(project)">Caso de estudio</button><a *ngIf="project.repo" [href]="project.repo" target="_blank" rel="noopener">Código ↗</a></div></div>
       </article>
     </div>
     <a class="github-link" href="https://github.com/FrancoVivass" target="_blank" rel="noopener">Ver los 21 repositorios públicos en GitHub <span>↗</span></a>
@@ -172,6 +186,9 @@
 </main>
 
 <button class="terminal-trigger" type="button" (click)="terminalOpen = true" aria-label="Abrir terminal interactiva"><span>&gt;_</span> TERMINAL</button>
+<div class="command-backdrop" *ngIf="paletteOpen" (click)="paletteOpen = false"><section class="command-palette" role="dialog" aria-modal="true" aria-label="Buscar en el portfolio" (click)="$event.stopPropagation()"><header><label for="palette-search">¿A dónde querés ir?</label><button (click)="paletteOpen = false" aria-label="Cerrar buscador">×</button></header><input id="palette-search" [(ngModel)]="paletteQuery" placeholder="Buscá un proyecto o sección…" (keydown.enter)="paletteResults.length && navigateResult(paletteResults[0])"><div class="palette-results"><button *ngFor="let item of paletteResults" (click)="navigateResult(item)">{{ item.label }} <span>↵</span></button><p *ngIf="!paletteResults.length">No hay resultados. Probá con otra palabra.</p></div><small>Enter abre el primer resultado · Esc cierra</small></section></div>
+<button class="visual-trigger" (click)="settingsOpen = !settingsOpen" [attr.aria-expanded]="settingsOpen">✦ Personalizar</button>
+<aside class="visual-settings" *ngIf="settingsOpen" aria-label="Personalizar experiencia"><header><strong>Tu versión del portfolio</strong><button (click)="settingsOpen = false" aria-label="Cerrar personalización">×</button></header><p>Elegí un acento</p><div class="accent-options"><button *ngFor="let color of ['#a855f7', '#22d3ee', '#f59e0b']" [style.background]="color" [attr.aria-label]="'Acento ' + color" [attr.aria-pressed]="visualAccent === color" (click)="visualAccent = color; configureVisuals()"></button></div><label><input type="checkbox" [(ngModel)]="calmMotion" (change)="configureVisuals()"> Movimiento reducido</label><label><input type="checkbox" [(ngModel)]="wireframe" (change)="configureVisuals()"> Estilo blueprint</label><small>Las preferencias se guardan en este navegador.</small></aside>
 <aside class="tour-guide" *ngIf="tourActive" aria-live="polite"><div><span>TOUR 0{{ tourStep + 1 }} / 0{{ tour.length }}</span><button (click)="tourActive = false" aria-label="Cerrar recorrido">×</button></div><strong>{{ tour[tourStep].title }}</strong><button class="primary" (click)="nextTour()">{{ tourStep === tour.length - 1 ? 'Finalizar' : 'Siguiente' }} <span>→</span></button></aside>
 <div class="terminal-backdrop" *ngIf="terminalOpen" (click)="terminalOpen = false">
   <section class="terminal" role="dialog" aria-modal="true" aria-label="Terminal de Franco" (click)="$event.stopPropagation()">
@@ -185,8 +202,8 @@
   <main><section><h2>Perfil</h2><p>Analista de Sistemas orientado al desarrollo de aplicaciones web, sistemas de gestión y productos digitales que conectan personas, procesos y datos.</p><h2>Experiencia</h2><h3>Secretaría de Seguridad / Centro de Operaciones y Monitoreo · 2026</h3><p>Instalación, configuración y mantenimiento de videovigilancia, DVR, redes y acceso remoto.</p><h3>Desarrollo independiente · Actualidad</h3><p>Análisis y construcción de páginas, sistemas de gestión y productos web.</p></section><aside><h2>Tecnologías</h2><p>Angular · TypeScript · Supabase · PostgreSQL · REST APIs · Git · Cloudflare · Vercel</p><h2>Proyectos</h2><p>AS Academic System<br>Vestia<br>Retake<br>Centro Universitario<br>Manijeada<br>Simulaciones Monte Carlo</p><h2>Formación</h2><p>Analista de Sistemas<br>Instituto Francisco de Paula Robles · Agosto 2026</p></aside></main>
 </section>
 
-<div class="case-backdrop" *ngIf="selectedProject" (click)="selectedProject = null">
-  <article class="case-study" role="dialog" aria-modal="true" [attr.aria-label]="'Caso de estudio ' + selectedProject.name" (click)="$event.stopPropagation()"><button class="case-close" (click)="selectedProject = null" aria-label="Cerrar caso de estudio">×</button><p class="eyebrow">{{ selectedProject.eyebrow }}</p><h2>{{ selectedProject.name }}</h2><div class="case-columns"><div><small>EL DESAFÍO</small><p>{{ selectedProject.description }}</p></div><div><small>LA SOLUCIÓN</small><p>{{ selectedProject.result }}</p></div></div><div class="tags"><span *ngFor="let tech of selectedProject.tech">{{ tech }}</span></div><footer><span>{{ selectedProject.status }}</span><div><a *ngIf="selectedProject.live" [href]="selectedProject.live" target="_blank" rel="noopener">Abrir demo ↗</a><a *ngIf="selectedProject.repo" [href]="selectedProject.repo" target="_blank" rel="noopener">Ver repositorio ↗</a></div></footer></article>
+<div class="case-backdrop" *ngIf="selectedProject" (click)="closeProjectCard()">
+  <article class="case-study" [style.view-transition-name]="'project-' + projects.indexOf(selectedProject)" role="dialog" aria-modal="true" [attr.aria-label]="'Caso de estudio ' + selectedProject.name" (click)="$event.stopPropagation()"><button class="case-close" (click)="closeProjectCard()" aria-label="Cerrar caso de estudio">×</button><p class="eyebrow">{{ selectedProject.eyebrow }}</p><h2>{{ selectedProject.name }}</h2><div class="case-columns"><div><small>EL DESAFÍO</small><p>{{ selectedProject.description }}</p></div><div><small>LA SOLUCIÓN</small><p>{{ selectedProject.result }}</p></div></div><div class="tags"><span *ngFor="let tech of selectedProject.tech">{{ tech }}</span></div><footer><span>{{ selectedProject.status }}</span><div><a *ngIf="selectedProject.repo" [href]="selectedProject.repo" target="_blank" rel="noopener">Ver repositorio ↗</a></div></footer></article>
 </div>
 
 <footer><a class="brand" href="#inicio"><span>FV</span> Franco Vivas</a><p>Analista de Sistemas · Full-Stack Developer</p><p>© 2026 · Dolores, Argentina</p></footer>

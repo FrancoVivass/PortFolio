@@ -1,28 +1,66 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { Meta, Title } from '@angular/platform-browser';
+import { ExploreComponent } from './explore.component';
 
 type Project = { name: string; eyebrow: string; description: string; result: string; tech: string[]; status: string; repo?: string; live?: string };
 
-@Component({ selector: 'app-home', standalone: true, imports: [CommonModule, ReactiveFormsModule, FormsModule], templateUrl: './home.component.html', styleUrl: './home.component.scss' })
+@Component({ selector: 'app-home', standalone: true, imports: [CommonModule, ReactiveFormsModule, FormsModule, ExploreComponent], templateUrl: './home.component.html', styleUrl: './home.component.scss' })
 export class HomeComponent implements AfterViewInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  private transitionProject(project: Project | null): void {
+    const change = () => { this.selectedProject = project; this.changeDetector.detectChanges(); };
+    const viewDocument = document as Document & { startViewTransition?: (callback: () => void) => unknown };
+    if (viewDocument.startViewTransition && !this.calmMotion && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) viewDocument.startViewTransition(change);
+    else change();
+  }
+  openProjectCard(project: Project): void { this.transitionProject(project); }
+  closeProjectCard(): void { this.transitionProject(null); }
   private bootTimer?: ReturnType<typeof setTimeout>;
   private revealObserver?: IntersectionObserver;
   menuOpen = false; scrolled = false; sending = false; sent = false; submitError = '';
   booting = true; terminalOpen = false; audience: 'client' | 'recruiter' = 'client'; progress = 0;
   selectedProject: Project | null = null; terminalCommand = ''; terminalOutput = ['Escribí “help” para ver los comandos disponibles.'];
   tourActive = false; tourStep = 0;
-  labTab: 'academic' | 'vestia' | 'builder' | 'stack' = 'academic';
-  academicStudents = [
-    { name: 'Lucía Fernández', course: '3° A', present: true, grade: 8 },
-    { name: 'Tomás Díaz', course: '3° A', present: false, grade: 6 },
-    { name: 'Martina López', course: '3° B', present: true, grade: 9 }
-  ];
-  vestiaStock = 18; vestiaSales = 4; vestiaMessage = 'Caja lista para operar';
+  paletteOpen = false; paletteQuery = ''; previewColor = '#a855f7'; previewRadius = 18; previewFont = 'sans-serif';
+  automationStep = -1; private automationTimer?: ReturnType<typeof setInterval>;
+  inspectorPart = 0; visitorRoute = 'Todos';
+  readonly inspectParts = [{ name: 'Navegación', detail: 'Organiza las secciones y permite llegar rápido a lo importante.' }, { name: 'Contenido', detail: 'Una jerarquía clara conecta el problema con la solución.' }, { name: 'Acción', detail: 'El botón abre una conversación con el contexto del proyecto.' }];
+  readonly navigationItems = [{ label: 'Inicio', id: 'inicio' }, { label: 'Proyectos', id: 'proyectos' }, { label: 'Laboratorio', id: 'laboratorio' }, { label: 'Playground creativo', id: 'playground' }, { label: 'Perfil y experiencia', id: 'perfil' }, { label: 'Consultar presupuesto', id: 'contacto' }];
+  get paletteResults(): {label: string; id: string}[] { return [...this.navigationItems, ...this.projects.map(project => ({ label: project.name, id: project.name }))].filter(item => item.label.toLocaleLowerCase().includes(this.paletteQuery.toLocaleLowerCase())); }
+  get routeProjects(): Project[] { return this.visitorRoute === 'Comercio' ? this.projects.filter(project => project.name === 'Vestia') : this.visitorRoute === 'Web' ? this.projects.filter(project => project.name.includes('Centro') || project.name === 'Retake') : this.projects; }
+  @HostListener('document:keydown', ['$event']) onShortcut(event: KeyboardEvent): void { if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); this.paletteOpen = !this.paletteOpen; } if (event.key === 'Escape') this.paletteOpen = false; }
+  navigateResult(item: { label: string; id: string }): void { this.paletteOpen = false; const project = this.projects.find(project => project.name === item.id); if (project) this.selectedProject = project; else this.scrollTo(item.id); }
+  surpriseProject(): void { this.selectedProject = this.projects[Math.floor(Math.random() * this.projects.length)]; }
+  runAutomation(): void { if (this.automationTimer) clearInterval(this.automationTimer); this.automationStep = 0; this.automationTimer = setInterval(() => { this.automationStep++; if (this.automationStep >= 3 && this.automationTimer) { clearInterval(this.automationTimer); this.automationTimer = undefined; } }, 850); }
+  settingsOpen = false; visualAccent = '#a855f7'; calmMotion = false; wireframe = false;
+  sceneAngle = 0; journeyStep = 0; challengeStep = 0; challengeMessage = 'Conectá primero la interfaz.';
+  readonly journey = ['Idea', 'Estructura', 'Interfaz', 'Producto'];
+  readonly challenge = ['Interfaz', 'API', 'Base de datos'];
+  configureVisuals(): void {
+    this.host.nativeElement.style.setProperty('--accent', this.visualAccent);
+    this.host.nativeElement.classList.toggle('calm-motion', this.calmMotion);
+    this.host.nativeElement.classList.toggle('wireframe-mode', this.wireframe);
+    try { localStorage.setItem('fv-visuals', JSON.stringify({ accent: this.visualAccent, calm: this.calmMotion, wireframe: this.wireframe })); } catch { /* Preferences remain usable without storage. */ }
+  }
+  rotateScene(event: PointerEvent): void {
+    if (this.calmMotion || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const bounds = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    this.sceneAngle = ((event.clientX - bounds.left) / bounds.width - .5) * 65;
+  }
+  connectModule(module: string): void {
+    if (this.challengeStep === 3) return;
+    if (module !== this.challenge[this.challengeStep]) { this.challengeMessage = 'Ese módulo espera otra conexión. Probá con ' + this.challenge[this.challengeStep] + '.'; return; }
+    this.challengeStep++;
+    this.challengeMessage = this.challengeStep === 3 ? 'Sistema conectado. ¡Desbloqueaste el modo cyan!' : 'Conexión lista. Ahora conectá ' + this.challenge[this.challengeStep] + '.';
+    if (this.challengeStep === 3) { this.visualAccent = '#22d3ee'; this.configureVisuals(); }
+  }
+  labTab: 'builder' | 'stack' = 'builder';
+  openProjectByName(name: string): void { const project = this.projects.find(project => project.name === name); if (project) this.openProjectCard(project); }
   readonly builderModules = [{ name: 'Usuarios y roles', active: true }, { name: 'Stock', active: false }, { name: 'Pagos', active: false }, { name: 'Reportes', active: true }, { name: 'Notificaciones', active: false }, { name: 'Panel administrativo', active: true }];
   readonly technologies = [
     { name: 'Angular', projects: ['Academic System', 'Vestia', 'Retake', 'Centro Universitario'] },
@@ -68,13 +106,14 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   readonly contactForm = this.fb.group({ name: ['', [Validators.required, Validators.minLength(2)]], company: [''], email: ['', [Validators.required, Validators.email]], phone: [''], service: ['landing', Validators.required], deadline: [''], message: ['', [Validators.required, Validators.minLength(20)]], admin: [false], database: [false], payments: [false], website: [''] });
   constructor(title: Title, meta: Meta) { title.setTitle('Franco Vivas — Analista de Sistemas y Desarrollador Full-Stack'); meta.updateTag({ name: 'description', content: 'Desarrollo páginas web, sistemas de gestión y aplicaciones a medida para transformar procesos reales en soluciones simples.' }); }
   ngAfterViewInit(): void {
+    try { const preferences = JSON.parse(localStorage.getItem('fv-visuals') || 'null'); if (preferences) { this.visualAccent = ['#a855f7', '#22d3ee', '#f59e0b'].includes(preferences.accent) ? preferences.accent : '#a855f7'; this.calmMotion = preferences.calm === true; this.wireframe = preferences.wireframe === true; this.configureVisuals(); } } catch { /* Use defaults when stored preferences are invalid. */ }
     this.bootTimer = setTimeout(() => this.booting = false, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1900);
     this.revealObserver = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('revealed'); this.revealObserver?.unobserve(entry.target); } }), { threshold: .12 });
     const root = this.host.nativeElement as HTMLElement;
     root.querySelectorAll('.section-heading, .project, .service-card, .experience article, .process-line article').forEach((element: Element) => { element.classList.add('reveal'); this.revealObserver?.observe(element); });
     this.loadGithub();
   }
-  ngOnDestroy(): void { if (this.bootTimer) clearTimeout(this.bootTimer); this.revealObserver?.disconnect(); }
+  ngOnDestroy(): void { if (this.bootTimer) clearTimeout(this.bootTimer); if (this.automationTimer) clearInterval(this.automationTimer); this.revealObserver?.disconnect(); }
   @HostListener('window:scroll') onScroll(): void { this.scrolled = window.scrollY > 24; const max = document.documentElement.scrollHeight - innerHeight; this.progress = max > 0 ? Math.min(100, (scrollY / max) * 100) : 0; }
   @HostListener('document:mousemove', ['$event']) onPointerMove(event: MouseEvent): void { this.host.nativeElement.style.setProperty('--pointer-x', `${event.clientX}px`); this.host.nativeElement.style.setProperty('--pointer-y', `${event.clientY}px`); }
   @HostListener('document:keydown.escape') closeOverlays(): void { this.terminalOpen = false; this.selectedProject = null; }
@@ -86,7 +125,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   tilt(event: MouseEvent): void { const card = event.currentTarget as HTMLElement; const rect = card.getBoundingClientRect(); const x = ((event.clientX - rect.left) / rect.width - .5) * 5; const y = ((event.clientY - rect.top) / rect.height - .5) * -5; card.style.setProperty('--rx', `${y}deg`); card.style.setProperty('--ry', `${x}deg`); }
   resetTilt(event: MouseEvent): void { const card = event.currentTarget as HTMLElement; card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg'); }
   runCommand(): void { const command = this.terminalCommand.trim().toLowerCase(); if (!command) return; const responses: Record<string, string> = { help: 'Comandos: about · projects · skills · lab · contact · github · clear · (hay un comando secreto)', about: 'Franco Vivas — Analista de Sistemas y desarrollador Full-Stack.', projects: 'Academic System · Vestia · Retake · Centro Universitario · Manijeada', skills: 'Angular · TypeScript · Supabase · PostgreSQL · REST · Cloudflare', lab: 'Abriendo el laboratorio interactivo…', contact: 'francovivasa@gmail.com — bajando a la sección de contacto…', github: 'github.com/FrancoVivass', 'sudo make-it-work': 'Acceso concedido. Modo ultraviolet activado ✦' }; if (command === 'clear') this.terminalOutput = []; else this.terminalOutput = [...this.terminalOutput, `$ ${command}`, responses[command] ?? `Comando no encontrado: ${command}. Probá “help”.`]; if (command === 'sudo make-it-work') this.easterEgg = !this.easterEgg; if (['contact', 'projects', 'about', 'lab'].includes(command)) { this.terminalOpen = false; this.scrollTo(command === 'contact' ? 'contacto' : command === 'projects' ? 'proyectos' : command === 'about' ? 'perfil' : 'laboratorio'); } if (command === 'github') window.open('https://github.com/FrancoVivass', '_blank', 'noopener'); this.terminalCommand = ''; }
-  registerSale(): void { if (this.vestiaStock < 1) { this.vestiaMessage = 'Stock agotado'; return; } this.vestiaStock--; this.vestiaSales++; this.vestiaMessage = `Venta #${this.vestiaSales} registrada · stock sincronizado`; }
   get selectedModulesCount(): number { return this.builderModules.filter(module => module.active).length; }
   builderWhatsapp(): string { const modules = this.builderModules.filter(module => module.active).map(module => module.name).join(', '); return `https://wa.me/542245421367?text=${encodeURIComponent(`Hola Franco, quiero consultar presupuesto por un sistema con: ${modules || 'módulos a definir'}.`)}`; }
   printCV(): void { window.print(); }
