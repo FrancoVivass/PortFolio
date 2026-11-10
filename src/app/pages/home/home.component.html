@@ -1,486 +1,209 @@
-<!-- Hero Section -->
-<section class="hero-section">
-  <div class="hero-background">
-    <div class="hero-particles"></div>
-    <div class="hero-gradient"></div>
-  </div>
-  
-  <div class="container">
-    <div class="hero-content">
-      <div class="hero-text">
-        <div class="hero-badge">
-          <svg class="badge-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
-          <span class="badge-text">Hola, soy Franco</span>
-        </div>
-        
-        <h1 class="hero-title">
-          <span class="title-line">Analista de Sistemas</span>
-          <span class="title-line highlight">Frontend & UI/UX</span>
-        </h1>
-        
-        <p class="hero-subtitle">
-          <span class="typewriter-text">{{ currentText }}</span><span class="cursor">|</span>
-        </p>
-        
-        <div class="hero-actions">
-          <a href="/projects" class="btn primary">
-            <span>Ver mis proyectos</span>
-            <span class="btn-icon">→</span>
-          </a>
-          <a href="/contact" class="btn secondary">
-            <span>Hablemos</span>
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
-            </svg>
-          </a>
-        </div>
-        
-        
+<div class="boot" [class.done]="!booting" aria-hidden="true">
+  <div class="boot-inner"><span>FV / PORTFOLIO</span><div class="boot-log"><p>Analizando problema</p><p>Diseñando solución</p><p>Desplegando experiencia</p></div><div class="boot-bar"><i></i></div><b>SYSTEM READY</b></div>
+</div>
+<div class="ambient" aria-hidden="true"></div>
+<div class="cursor-orbit" aria-hidden="true"><i></i></div>
+<div class="page-progress" aria-hidden="true"><i [style.height.%]="progress"></i></div>
+<header class="nav" [class.scrolled]="scrolled">
+  <a class="brand" href="#inicio" aria-label="Franco Vivas, inicio"><span>FV</span> Franco Vivas</a>
+  <button class="menu" type="button" (click)="menuOpen = !menuOpen" [attr.aria-expanded]="menuOpen" aria-label="Abrir menú"><i></i><i></i></button>
+  <nav [class.open]="menuOpen" aria-label="Navegación principal">
+    <button (click)="scrollTo('proyectos')">Proyectos</button><button (click)="scrollTo('servicios')">Servicios</button><button (click)="scrollTo('perfil')">Perfil</button>
+    <button class="nav-cta" (click)="scrollTo('contacto')">Solicitar presupuesto <span>↗</span></button>
+  </nav>
+</header>
+
+<main id="main" [class.easter-mode]="easterEgg">
+  <button class="command-launch" (click)="paletteOpen = true">Buscar <kbd>Ctrl K</kbd></button>
+  <section class="hero" id="inicio">
+    <div class="glow"></div>
+    <div class="hero-copy">
+      <p class="kicker"><span></span> Disponible para proyectos seleccionados</p>
+      <div class="audience-switch" aria-label="Elegir objetivo"><button [class.active]="audience === 'client'" (click)="selectAudience('client')">Necesito una solución</button><button [class.active]="audience === 'recruiter'" (click)="selectAudience('recruiter')">Quiero contratarte</button></div>
+      <h1>Diseño sistemas que hacen el trabajo <em>más simple.</em></h1>
+      <p class="lead" *ngIf="audience === 'client'">Analizo problemas reales y los convierto en aplicaciones web claras, rápidas y preparadas para crecer.</p>
+      <p class="lead" *ngIf="audience === 'recruiter'">Analista de Sistemas Full-Stack con foco en Angular, Supabase y productos que conectan operación, usuarios y datos.</p>
+      <div class="hero-actions">
+        <button class="primary" (click)="scrollTo('contacto')">Solicitar presupuesto <span>↗</span></button>
+        <button class="text-link" (click)="scrollTo('proyectos')">Explorar proyectos <span>↓</span></button>
+        <button class="text-link" (click)="scrollTo('explorar')">Modo explorar ✦</button>
+        <button class="text-link tour-start" (click)="startTour()">Tour interactivo <span>▶</span></button>
       </div>
-      
-      <div class="hero-visual">
-        <div class="visual-container">
-          <div class="code-window">
-            <div class="window-header">
-              <div class="window-controls">
-                <span class="control red"></span>
-                <span class="control yellow"></span>
-                <span class="control green"></span>
-              </div>
-              <div class="window-title">franco-vivas.ts</div>
-            </div>
-            <div class="window-content">
-              <pre class="code-display">{{ currentCodeText }}<span class="code-cursor">|</span></pre>
-            </div>
-          </div>
-        </div>
+      <div class="hero-meta"><span>Analista de Sistemas</span><span>Full-Stack Developer</span><span>Dolores, Argentina</span></div>
     </div>
-  </div>
-    
-    <div class="hero-social">
-      <div class="social-links">
-        <a href="https://github.com/franco-vivas" target="_blank" rel="noopener" class="social-link" aria-label="GitHub">
-          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-          </svg>
-          <span class="social-text"></span>
-        </a>
-        <a href="https://linkedin.com/in/franco-vivas" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
-          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-          </svg>
-          <span class="social-text"></span>
-        </a>
-        <a href="mailto:francovivasa@gmail.com" class="social-link" aria-label="Email">
-          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-.904.732-1.636 1.636-1.636h.91L12 10.09l9.455-6.269h.909c.904 0 1.636.732 1.636 1.636z"/>
-          </svg>
-          <span class="social-text"></span>
-        </a>
-        <a href="https://wa.me/542245421367" target="_blank" rel="noopener" class="social-link" aria-label="WhatsApp">
-          <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-          </svg>
-          <span class="social-text"></span>
-        </a>
+    <div class="hero-system spatial-scene" (pointermove)="rotateScene($event)" (pointerleave)="sceneAngle = 0" [style.--scene-angle]="sceneAngle + 'deg'">
+      <div class="spatial-rings" aria-hidden="true"><i></i><i></i><i></i><b>FV</b></div>
+      <div class="system-top"><span>FRANCO / SYSTEMS</span><b>ONLINE</b></div>
+      <div class="orbit"><div class="core">FV<small>BUILD 26</small></div><i class="node n1"></i><i class="node n2"></i><i class="node n3"></i></div>
+      <div class="system-bottom"><span>DESIGN</span><span>DEVELOP</span><span>DEPLOY</span></div>
+    </div>
+    <button class="scroll" (click)="scrollTo('proyectos')" aria-label="Ir a proyectos">SCROLL <span>↓</span></button>
+  </section>
+
+  <aside class="recruiter-strip" id="recruiter" *ngIf="audience === 'recruiter'">
+    <div><small>DISPONIBILIDAD</small><strong>Abierto a oportunidades</strong></div><div><small>BASE</small><strong>Dolores · remoto</strong></div><div><small>STACK PRINCIPAL</small><strong>Angular · TypeScript · Supabase</strong></div><div><small>FORMACIÓN</small><strong>Analista de Sistemas · 2026</strong></div>
+    <button class="primary" (click)="printCV()">Ver / imprimir CV <span>↗</span></button>
+  </aside>
+
+  <app-explore [projects]="projects" (openProject)="openProjectByName($event)"></app-explore>
+  <section class="playground section" id="playground">
+    <p class="kicker">Creative playground / Tocá, cambiá, descubrí</p><h2>¿Y si lo diseñás vos?</h2><p class="play-intro">Experimentá con una interfaz, ejecutá un flujo y encontrá el proyecto que se parece a tu idea.</p>
+    <div class="play-grid">
+      <article class="play-card"><header><span>01 / Diseño en vivo</span><h3>Tu estilo. Al instante.</h3></header><div class="design-controls"><label>Color <input type="color" [(ngModel)]="previewColor"></label><label>Bordes <input type="range" min="0" max="40" [(ngModel)]="previewRadius"></label><label>Tipografía <select [(ngModel)]="previewFont"><option value="sans-serif">Moderna</option><option value="serif">Editorial</option><option value="monospace">Developer</option></select></label></div><div class="live-design" [style.border-radius.px]="previewRadius" [style.font-family]="previewFont" [style.--preview]="previewColor"><small>ESTUDIO / TU MARCA</small><h3>Las buenas ideas<br>merecen una web.</h3><p>Una experiencia hecha a tu medida.</p><a [href]="builderWhatsapp()" target="_blank" rel="noopener" [style.border-radius.px]="previewRadius">Quiero algo así ↗</a></div><button class="text-link" (click)="previewColor = '#a855f7'; previewRadius = 18; previewFont = 'sans-serif'">Restablecer diseño ↻</button></article>
+      <article class="play-card"><header><span>02 / Automatizaciones</span><h3>Una consulta. Todo conectado.</h3></header><p>Simulación ilustrativa: no envía mensajes ni registra datos reales.</p><ol class="automation-flow"><li *ngFor="let step of ['Llega una consulta', 'Se organiza en el sistema', 'Se prepara una notificación', 'Listo para responder']; let i = index" [class.complete]="automationStep >= i"><span>{{ automationStep >= i ? '✓' : '0' + (i + 1) }}</span>{{ step }}</li></ol><button class="primary" (click)="runAutomation()" [disabled]="automationStep >= 0 && automationStep < 3">{{ automationStep === 3 ? 'Volver a ejecutar' : 'Simular recorrido' }} →</button><p aria-live="polite">{{ automationStep === 3 ? 'Flujo completo: la consulta ya tiene un recorrido claro.' : automationStep >= 0 ? 'Procesando la simulación…' : 'Presioná el botón para seguir el recorrido.' }}</p></article>
+      <article class="play-card"><header><span>03 / Explorador de interfaz</span><h3>Descubrí las decisiones.</h3></header><div class="inspect-preview"><button *ngFor="let part of inspectParts; let i = index" (click)="inspectorPart = i" [class.selected]="inspectorPart === i">{{ part.name }} <span>⊕</span></button></div><div class="inspect-note" aria-live="polite"><b>{{ inspectParts[inspectorPart].name }}</b><p>{{ inspectParts[inspectorPart].detail }}</p></div></article>
+      <article class="play-card"><header><span>04 / Tu recorrido</span><h3>¿Qué te trae por acá?</h3></header><div class="route-options"><button *ngFor="let route of ['Todos', 'Comercio', 'Web', 'Busco developer']" [class.selected]="visitorRoute === route" (click)="visitorRoute = route" [attr.aria-pressed]="visitorRoute === route">{{ route }}</button></div><div class="route-results"><button *ngFor="let project of routeProjects" (click)="openProjectCard(project)"><span>{{ project.name }}</span> ↗</button></div><button class="primary" (click)="surpriseProject()">Sorprendeme ✦</button></article>
+    </div>
+  </section>
+  <section class="statement">
+    <p>Del análisis al producto final.</p>
+    <h2>No desarrollo pantallas aisladas. Construyo soluciones que conectan <span>personas, procesos y datos.</span></h2>
+  </section>
+
+  <section class="creation-journey section" aria-label="De idea a producto">
+    <p class="kicker">Una idea. Muchas decisiones.</p><h2>Así toma forma un producto.</h2>
+    <div class="journey-controls"><button *ngFor="let step of journey; let i = index" (click)="journeyStep = i" [class.active]="journeyStep === i" [attr.aria-pressed]="journeyStep === i">0{{ i + 1 }} / {{ step }}</button></div>
+    <div class="journey-canvas" [attr.data-step]="journeyStep"><div class="journey-block" *ngFor="let label of ['Personas', 'Procesos', 'Datos', 'Experiencia']; let i = index" [style.--block]="i"><span>{{ label }}</span><i></i><i></i><i></i></div><strong>{{ ['¿Qué podemos resolver?', 'Conectar las piezas.', 'Hacerlo simple.', 'Listo para funcionar.'][journeyStep] }}</strong></div>
+    <p>{{ ['Todo empieza por entender una necesidad.', 'Defino el recorrido y cómo se relacionan los datos.', 'La estructura se convierte en una interfaz clara.', 'Los módulos trabajan juntos para resolver el problema.'][journeyStep] }}</p>
+  </section>
+
+  <section class="connection-game section" aria-label="Desafío de conexiones"><div><p class="kicker">Mini desafío / 20 segundos</p><h2>Conectá el sistema.</h2><p>¿Qué recorrido hace una consulta desde la pantalla hasta los datos? Elegí los módulos en orden.</p></div><div><div class="connection-buttons"><button *ngFor="let module of ['Base de datos', 'Interfaz', 'API']" (click)="connectModule(module)" [class.connected]="challenge.indexOf(module) < challengeStep" [disabled]="challenge.indexOf(module) < challengeStep">{{ module }} <span>{{ challenge.indexOf(module) < challengeStep ? '✓' : '+' }}</span></button></div><progress [value]="challengeStep" max="3" aria-label="Conexiones completadas"></progress><p aria-live="polite">{{ challengeMessage }}</p><button class="text-link" (click)="challengeStep = 0; challengeMessage = 'Conectá primero la interfaz.'">Reiniciar ↻</button></div></section>
+
+  <section class="lab section" id="laboratorio">
+    <div class="section-heading"><div><p class="kicker">03 / Probalo</p><h2>Un portfolio que también funciona.</h2></div><p>Estas micro experiencias muestran cómo pienso interfaces, estados y procesos reales. Todo ocurre en tu navegador.</p></div>
+    <div class="lab-tabs" aria-label="Herramientas interactivas">
+      <button [class.active]="labTab === 'builder'" (click)="labTab = 'builder'">Construí tu sistema</button><button [class.active]="labTab === 'stack'" (click)="labTab = 'stack'">Constelación tech</button>
+    </div>
+    <div class="lab-console">
+      <div *ngIf="labTab === 'builder'" class="builder-demo demo-grid">
+        <div class="demo-copy"><p class="eyebrow">SYSTEM BUILDER</p><h3>Armá una primera versión de tu sistema.</h3><p>Elegí módulos. La consulta se genera con el alcance que seleccionaste, sin precios automáticos ni sorpresas.</p><a class="primary builder-send" [href]="builderWhatsapp()" target="_blank" rel="noopener">Consultar por WhatsApp <span>↗</span></a></div>
+        <div class="module-grid"><button *ngFor="let module of builderModules" [class.active]="module.active" (click)="module.active = !module.active"><span>{{ module.active ? '✓' : '+' }}</span>{{ module.name }}</button><div class="builder-output"><small>CONFIGURACIÓN ACTUAL</small><p>{{ selectedModulesCount }} módulos seleccionados</p></div></div>
+      </div>
+      <div *ngIf="labTab === 'stack'" class="stack-demo demo-grid">
+        <div class="tech-cloud"><button *ngFor="let tech of technologies; let i = index" [class.active]="activeTechnology === tech" [style.--i]="i" (click)="activeTechnology = tech">{{ tech.name }}</button><i class="constellation-core">FV</i></div>
+        <div class="demo-copy"><p class="eyebrow">TECNOLOGÍA → RESULTADO</p><h3>{{ activeTechnology.name }}</h3><p>Proyectos reales donde usé esta tecnología:</p><ul><li *ngFor="let project of activeTechnology.projects">{{ project }}</li></ul></div>
       </div>
     </div>
-    
-    <div class="scroll-indicator">
-      <svg class="scroll-arrow" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
-      </svg>
-      <span class="scroll-text">Scroll</span>
+    <div class="comparison">
+      <div class="comparison-copy"><p class="eyebrow">ANTES / DESPUÉS</p><h3>De una operación dispersa a un flujo claro.</h3><p>Mové el control para comparar el mismo proceso antes y después de digitalizarlo.</p><input type="range" min="12" max="88" [(ngModel)]="comparison" aria-label="Comparar antes y después"></div>
+      <div class="comparison-stage"><div class="before"><small>ANTES</small><span>Planillas</span><span>Mensajes sueltos</span><span>Datos repetidos</span><span>Sin trazabilidad</span></div><div class="after" [style.width.%]="100 - comparison"><small>DESPUÉS</small><span>Una sola fuente</span><span>Roles definidos</span><span>Reportes claros</span><span>Historial seguro</span></div><i [style.left.%]="comparison"></i></div>
     </div>
-  </div>
+  </section>
+
+  <section class="github-pulse" aria-label="Actividad pública de GitHub">
+    <div><span>GITHUB / LIVE DATA</span><i [class.online]="github.loaded"></i></div><strong>{{ github.repos }}</strong><p>repositorios públicos</p><strong>{{ github.languages }}</strong><p>lenguajes principales</p><strong class="latest">{{ github.latest }}</strong><p>último repositorio actualizado</p><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">Abrir perfil ↗</a>
+  </section>
+
+  <section class="projects section" id="proyectos">
+    <div class="section-heading"><div><p class="kicker">01 / Trabajo seleccionado</p><h2>Proyectos con un problema real detrás.</h2></div><p>Casos académicos y productos propios donde combiné análisis, diseño, datos y desarrollo.</p></div>
+    <div class="project-grid">
+      <article *ngFor="let project of projects; let i = index" class="project" [class.featured]="i < 2" [style.view-transition-name]="selectedProject === project ? 'none' : 'project-' + i" (mousemove)="tilt($event)" (mouseleave)="resetTilt($event)">
+        <div class="project-number">0{{ i + 1 }}</div>
+        <div class="project-body"><p class="eyebrow">{{ project.eyebrow }}</p><h3>{{ project.name }}</h3><p class="description">{{ project.description }}</p><p class="result"><b>Impacto</b>{{ project.result }}</p>
+          <div class="tags"><span *ngFor="let tech of project.tech">{{ tech }}</span></div>
+        </div>
+        <div class="project-foot"><span>{{ project.status }}</span><div><button (click)="openProjectCard(project)">Caso de estudio</button><a *ngIf="project.repo" [href]="project.repo" target="_blank" rel="noopener">Código ↗</a></div></div>
+      </article>
+    </div>
+    <a class="github-link" href="https://github.com/FrancoVivass" target="_blank" rel="noopener">Ver los 21 repositorios públicos en GitHub <span>↗</span></a>
+  </section>
+
+  <section class="architecture section" id="arquitectura">
+    <div class="section-heading"><div><p class="kicker">02 / Bajo el capó</p><h2>Explorador de arquitectura.</h2></div><p>No se trata solo de cómo se ve: cada producto necesita una estructura coherente para crecer y mantenerse.</p></div>
+    <div class="architecture-shell">
+      <div class="architecture-tabs" role="tablist" aria-label="Elegir arquitectura">
+        <button *ngFor="let item of architectures; let i = index" role="tab" [attr.aria-selected]="architectureIndex === i" [class.active]="architectureIndex === i" (click)="architectureIndex = i"><span>0{{ i + 1 }}</span>{{ item.name }}</button>
+      </div>
+      <div class="architecture-view">
+        <div class="architecture-copy"><p class="eyebrow">{{ architectures[architectureIndex].type }}</p><h3>{{ architectures[architectureIndex].name }}</h3><p>{{ architectures[architectureIndex].summary }}</p><div class="data-flow"><span *ngFor="let step of architectures[architectureIndex].flow; let last = last">{{ step }}<i *ngIf="!last">→</i></span></div></div>
+        <div class="system-map" aria-label="Componentes principales del sistema">
+          <div class="map-core"><span>FV</span><small>SYSTEM</small></div>
+          <div *ngFor="let node of architectures[architectureIndex].nodes; let i = index" class="map-node" [ngClass]="'node-' + i"><b>{{ node.label }}</b><small>{{ node.detail }}</small></div>
+          <div class="map-orbit"></div>
+        </div>
+      </div>
+      <div class="architecture-status"><span><i></i> Architecture online</span><span>04 services connected</span><span>Responsive / secure / scalable</span></div>
+    </div>
+  </section>
+
+  <section class="process section" id="proceso">
+    <div class="section-heading"><div><p class="kicker">04 / Cómo trabajo</p><h2>De una necesidad a un sistema operativo.</h2></div><p>Cada etapa reduce incertidumbre antes de sumar complejidad.</p></div>
+    <div class="process-line"><article *ngFor="let step of ['Problema','Análisis','Diseño','Desarrollo','Pruebas','Publicación']; let i = index"><span>0{{ i + 1 }}</span><i></i><h3>{{ step }}</h3><p>{{ ['Entender el objetivo y a quién afecta.','Definir alcance, datos y prioridades.','Convertir el flujo en una interfaz clara.','Construir módulos pequeños y mantenibles.','Validar escenarios, errores y dispositivos.','Medir, documentar y seguir mejorando.'][i] }}</p></article></div>
+  </section>
+
+  <section class="services section" id="servicios">
+    <div class="section-heading"><div><p class="kicker">05 / Servicios</p><h2>Soluciones pensadas para cada necesidad.</h2></div><p>El presupuesto se prepara después de conocer el objetivo, el alcance y las integraciones necesarias.</p></div>
+    <div class="service-list">
+      <article *ngFor="let service of services; let i = index" class="service-card">
+        <span class="service-index">0{{ i + 1 }}</span><div><h3>{{ service.title }}</h3><p>{{ service.copy }}</p><small>{{ service.includes }}</small></div>
+        <div class="price"><small>{{ service.time }}</small><button (click)="contactForm.controls.service.setValue(service.value); scrollTo('contacto')">Consultar presupuesto ↗</button></div>
+      </article>
+    </div>
+    <div class="terms"><p><b>Forma de trabajo</b> 50% al comenzar y 50% antes de publicar. Incluye hasta 3 rondas de revisión.</p><p>Dominio, hosting, licencias y servicios externos se presupuestan por separado después de definir el alcance.</p></div>
+  </section>
+
+  <section class="profile section" id="perfil">
+    <div class="profile-title"><p class="kicker">06 / Perfil</p><h2>Resolutivo.<br><span>Creativo.</span><br>Comprometido.</h2></div>
+    <div class="profile-copy">
+      <p class="big">Soy Franco Vivas, Analista de Sistemas y desarrollador Full-Stack de Dolores, Buenos Aires.</p>
+      <p>Me formé en el Instituto Francisco de Paula Robles y finalicé la carrera en agosto de 2026. Trabajo en productos digitales propios, proyectos académicos y soluciones independientes para organizaciones y comercios.</p>
+      <p>Mi experiencia también incluye soporte técnico, redes y sistemas de videovigilancia para entornos operativos. Esa cercanía con problemas concretos define mi forma de desarrollar: entender primero, construir después.</p>
+      <div class="skill-groups"><div><b>Construyo con</b><span>Angular · TypeScript · Supabase · PostgreSQL · APIs REST</span></div><div><b>También trabajo</b><span>Tailwind · GSAP · Three.js · Git · Cloudflare · Vercel</span></div></div>
+    </div>
+    <div class="experience">
+      <p class="kicker">Trayectoria técnica</p>
+      <article><span>2026</span><div><h3>Secretaría de Seguridad / Centro de Operaciones y Monitoreo</h3><p>Instalación, configuración y mantenimiento de videovigilancia, DVR, redes y acceso remoto para entornos operativos.</p></div></article>
+      <article><span>Experiencia anterior</span><div><h3>CNRT</h3><p>Experiencia laboral en un entorno institucional, incorporando criterios de responsabilidad, operación y soporte.</p></div></article>
+      <article><span>Actualidad</span><div><h3>Desarrollo independiente</h3><p>Análisis y construcción de páginas, sistemas de gestión y productos web propios para resolver necesidades concretas.</p></div></article>
+      <article><span>Agosto 2026</span><div><h3>Analista de Sistemas</h3><p>Carrera finalizada en el Instituto Francisco de Paula Robles, Dolores.</p></div></article>
+    </div>
+  </section>
+
+  <section class="faq section" id="preguntas">
+    <div class="section-heading"><div><p class="kicker">07 / Preguntas frecuentes</p><h2>Antes de empezar un proyecto.</h2></div><p>Respuestas directas sobre alcance, pagos, publicación y mantenimiento.</p></div>
+    <div class="faq-list"><details *ngFor="let faq of faqs"><summary>{{ faq.question }}<span>+</span></summary><p>{{ faq.answer }}</p></details></div>
+  </section>
+
+  <section class="contact section" id="contacto">
+    <div class="contact-intro"><p class="kicker">08 / Empecemos</p><h2>Contame qué necesitás resolver.</h2><p>Recibís una primera orientación sin costo. Respondo generalmente dentro de las próximas 24 horas hábiles.</p>
+      <div class="estimate"><small>Presupuesto personalizado</small><strong>Contame tu idea</strong><span>La primera consulta es gratuita y podés continuar directamente por WhatsApp.</span></div>
+      <div class="socials"><a href="mailto:francovivasa@gmail.com">Email ↗</a><a href="https://github.com/FrancoVivass" target="_blank" rel="noopener">GitHub ↗</a><a href="https://www.linkedin.com/in/franco-vivas-ab915628a" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://instagram.com/fran.vivas_ok" target="_blank" rel="noopener">Instagram ↗</a></div>
+    </div>
+    <form [formGroup]="contactForm" (ngSubmit)="submit()" novalidate>
+      <div class="field half"><label for="name">Nombre *</label><input id="name" formControlName="name" autocomplete="name" placeholder="Tu nombre"><small *ngIf="contactForm.controls.name.touched && contactForm.controls.name.invalid">Ingresá tu nombre.</small></div>
+      <div class="field half"><label for="company">Empresa</label><input id="company" formControlName="company" autocomplete="organization" placeholder="Opcional"></div>
+      <div class="field half"><label for="email">Email *</label><input id="email" type="email" formControlName="email" autocomplete="email" placeholder="nombre@email.com"><small *ngIf="contactForm.controls.email.touched && contactForm.controls.email.invalid">Ingresá un email válido.</small></div>
+      <div class="field half"><label for="phone">WhatsApp</label><input id="phone" formControlName="phone" autocomplete="tel" placeholder="Código de área + número"></div>
+      <div class="field half"><label for="service">Servicio *</label><select id="service" formControlName="service" (change)="updateEstimate()"><option *ngFor="let service of services" [value]="service.value">{{ service.title }}</option></select></div>
+      <fieldset class="addons"><legend>¿Qué debería incluir?</legend><label><input type="checkbox" formControlName="admin"><span>Panel administrativo</span></label><label><input type="checkbox" formControlName="database"><span>Base de datos y usuarios</span></label><label><input type="checkbox" formControlName="payments"><span>Pagos online</span></label></fieldset>
+      <div class="field"><label for="deadline">¿Cuándo te gustaría comenzar?</label><input id="deadline" formControlName="deadline" placeholder="Por ejemplo: octubre de 2026"></div>
+      <div class="field"><label for="message">Proyecto *</label><textarea id="message" formControlName="message" rows="5" placeholder="Contame qué querés mejorar, quién lo va a usar y qué resultado esperás."></textarea><small *ngIf="contactForm.controls.message.touched && contactForm.controls.message.invalid">Contame un poco más (mínimo 20 caracteres).</small></div>
+      <input class="honeypot" tabindex="-1" formControlName="website" autocomplete="off" aria-hidden="true">
+      <p class="form-status success" *ngIf="sent">Consulta recibida. Gracias por escribir.</p><p class="form-status error" *ngIf="submitError">{{ submitError }}</p>
+      <div class="form-actions"><button class="primary" type="submit" [disabled]="sending">{{ sending ? 'Enviando…' : 'Enviar consulta' }} <span>↗</span></button><a [href]="whatsappLink()" target="_blank" rel="noopener">Continuar por WhatsApp ↗</a></div>
+    </form>
+  </section>
+</main>
+
+<button class="terminal-trigger" type="button" (click)="terminalOpen = true" aria-label="Abrir terminal interactiva"><span>&gt;_</span> TERMINAL</button>
+<div class="command-backdrop" *ngIf="paletteOpen" (click)="paletteOpen = false"><section class="command-palette" role="dialog" aria-modal="true" aria-label="Buscar en el portfolio" (click)="$event.stopPropagation()"><header><label for="palette-search">¿A dónde querés ir?</label><button (click)="paletteOpen = false" aria-label="Cerrar buscador">×</button></header><input id="palette-search" [(ngModel)]="paletteQuery" placeholder="Buscá un proyecto o sección…" (keydown.enter)="paletteResults.length && navigateResult(paletteResults[0])"><div class="palette-results"><button *ngFor="let item of paletteResults" (click)="navigateResult(item)">{{ item.label }} <span>↵</span></button><p *ngIf="!paletteResults.length">No hay resultados. Probá con otra palabra.</p></div><small>Enter abre el primer resultado · Esc cierra</small></section></div>
+<button class="visual-trigger" (click)="settingsOpen = !settingsOpen" [attr.aria-expanded]="settingsOpen">✦ Personalizar</button>
+<aside class="visual-settings" *ngIf="settingsOpen" aria-label="Personalizar experiencia"><header><strong>Tu versión del portfolio</strong><button (click)="settingsOpen = false" aria-label="Cerrar personalización">×</button></header><p>Elegí un acento</p><div class="accent-options"><button *ngFor="let color of ['#a855f7', '#22d3ee', '#f59e0b']" [style.background]="color" [attr.aria-label]="'Acento ' + color" [attr.aria-pressed]="visualAccent === color" (click)="visualAccent = color; configureVisuals()"></button></div><label><input type="checkbox" [(ngModel)]="calmMotion" (change)="configureVisuals()"> Movimiento reducido</label><label><input type="checkbox" [(ngModel)]="wireframe" (change)="configureVisuals()"> Estilo blueprint</label><small>Las preferencias se guardan en este navegador.</small></aside>
+<aside class="tour-guide" *ngIf="tourActive" aria-live="polite"><div><span>TOUR 0{{ tourStep + 1 }} / 0{{ tour.length }}</span><button (click)="tourActive = false" aria-label="Cerrar recorrido">×</button></div><strong>{{ tour[tourStep].title }}</strong><button class="primary" (click)="nextTour()">{{ tourStep === tour.length - 1 ? 'Finalizar' : 'Siguiente' }} <span>→</span></button></aside>
+<div class="terminal-backdrop" *ngIf="terminalOpen" (click)="terminalOpen = false">
+  <section class="terminal" role="dialog" aria-modal="true" aria-label="Terminal de Franco" (click)="$event.stopPropagation()">
+    <header><span><i></i><i></i><i></i></span><b>franco&#64;portfolio:~</b><button (click)="terminalOpen = false" aria-label="Cerrar terminal">×</button></header>
+    <div class="terminal-body"><p class="command">$ whoami</p><p>Franco Vivas — Analista de Sistemas / Full-Stack Developer</p><p *ngFor="let line of terminalOutput" [class.command]="line.startsWith('$')">{{ line }}</p><div class="terminal-links"><button (click)="terminalCommand = 'projects'; runCommand()">projects</button><button (click)="terminalCommand = 'about'; runCommand()">about</button><button (click)="terminalCommand = 'contact'; runCommand()">contact</button></div><form class="terminal-input" (ngSubmit)="runCommand()"><span>$</span><input [(ngModel)]="terminalCommand" name="terminalCommand" autocomplete="off" aria-label="Comando de terminal" autofocus><i></i></form></div>
+  </section>
+</div>
+
+<section class="cv-sheet" aria-label="Currículum de Franco Vivas">
+  <header><div><p>FRANCO VIVAS</p><h1>Analista de Sistemas<br>Full-Stack Developer</h1></div><span>Dolores, Buenos Aires · francovivasa&#64;gmail.com<br>github.com/FrancoVivass · linkedin.com/in/franco-vivas-ab915628a</span></header>
+  <main><section><h2>Perfil</h2><p>Analista de Sistemas orientado al desarrollo de aplicaciones web, sistemas de gestión y productos digitales que conectan personas, procesos y datos.</p><h2>Experiencia</h2><h3>Secretaría de Seguridad / Centro de Operaciones y Monitoreo · 2026</h3><p>Instalación, configuración y mantenimiento de videovigilancia, DVR, redes y acceso remoto.</p><h3>Desarrollo independiente · Actualidad</h3><p>Análisis y construcción de páginas, sistemas de gestión y productos web.</p></section><aside><h2>Tecnologías</h2><p>Angular · TypeScript · Supabase · PostgreSQL · REST APIs · Git · Cloudflare · Vercel</p><h2>Proyectos</h2><p>AS Academic System<br>Vestia<br>Retake<br>Centro Universitario<br>Manijeada<br>Simulaciones Monte Carlo</p><h2>Formación</h2><p>Analista de Sistemas<br>Instituto Francisco de Paula Robles · Agosto 2026</p></aside></main>
 </section>
 
-<!-- About Preview -->
-<section class="about-preview">
-  <div class="container">
-    <div class="section-header">
-      <h2>Sobre mí</h2>
-      <p>Desarrollador apasionado por crear soluciones digitales innovadoras</p>
-    </div>
-    
- 
-    
-    <div class="about-content">
-      <div class="about-story">
-        <div class="about-card">
-          <h3>Mi Historia</h3>
-          <p>Desde muy chico, la tecnología siempre me fascinó. Disfrutaba descubrir cómo funcionaban las computadoras y soñaba con crear cosas que impacten en la vida de las personas. Esa pasión me llevó a estudiar Analista de Sistemas, donde pude combinar programación, diseño e innovación digital.</p>
-          
-          <div class="about-highlights">
-            <div class="highlight-item">
-              <div class="highlight-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                </svg>
-              </div>
-              <div class="highlight-content">
-                <h4>Especialización Frontend</h4>
-                <p>Angular, React, HTML, CSS, Tailwind, Material Design, animaciones</p>
-              </div>
-            </div>
-            
-            <div class="highlight-item">
-              <div class="highlight-icon">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-              </div>
-              <div class="highlight-content">
-                <h4>Especialización Backend</h4>
-                <p>C#, .NET, MySQL, Python (scripts), API REST</p>
-              </div>
-            </div>
-          </div>
-          
-          <a href="/about" class="about-link">Conocer más →</a>
-        </div>
-      </div>
-    </div>
-    
-    <div class="about-additional">
-      <div class="about-journey">
-        <h3>Mi Trayectoria</h3>
-        <div class="journey-timeline">
-          <div class="timeline-item">
-            <div class="timeline-year">2023</div>
-            <div class="timeline-content">
-              <h4>Inicio de Estudios</h4>
-              <p>Comencé mi carrera como Analista de Sistemas, descubriendo mi pasión por el desarrollo frontend y el diseño de interfaces.</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-year">2024</div>
-            <div class="timeline-content">
-              <h4>Especialización Frontend</h4>
-              <p>Me enfoqué en Angular, React y tecnologías modernas, desarrollando proyectos como el Centro Universitario de Dolores.</p>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-year">2025</div>
-            <div class="timeline-content">
-              <h4>Continuidad y Crecimiento</h4>
-              <p>Expandiendo mis habilidades en desarrollo full-stack y trabajando en proyectos innovadores como realidad virtual.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="about-passion">
-        <h3>Mi Pasión</h3>
-        <div class="passion-content">
-          <p>Me apasiona crear experiencias digitales que no solo se vean bien, sino que también resuelvan problemas reales. Desde el diseño de interfaces intuitivas hasta la implementación de funcionalidades complejas, cada proyecto es una oportunidad de aprender y crecer.</p>
-          <div class="passion-highlights">
-            <div class="passion-item">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-              </svg>
-              <span>Diseño centrado en el usuario</span>
-            </div>
-            <div class="passion-item">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
-              <span>Innovación tecnológica</span>
-            </div>
-            <div class="passion-item">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-              <span>Soluciones escalables</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="case-backdrop" *ngIf="selectedProject" (click)="closeProjectCard()">
+  <article class="case-study" [style.view-transition-name]="'project-' + projects.indexOf(selectedProject)" role="dialog" aria-modal="true" [attr.aria-label]="'Caso de estudio ' + selectedProject.name" (click)="$event.stopPropagation()"><button class="case-close" (click)="closeProjectCard()" aria-label="Cerrar caso de estudio">×</button><p class="eyebrow">{{ selectedProject.eyebrow }}</p><h2>{{ selectedProject.name }}</h2><div class="case-columns"><div><small>EL DESAFÍO</small><p>{{ selectedProject.description }}</p></div><div><small>LA SOLUCIÓN</small><p>{{ selectedProject.result }}</p></div></div><div class="tags"><span *ngFor="let tech of selectedProject.tech">{{ tech }}</span></div><footer><span>{{ selectedProject.status }}</span><div><a *ngIf="selectedProject.repo" [href]="selectedProject.repo" target="_blank" rel="noopener">Ver repositorio ↗</a></div></footer></article>
+</div>
 
-<!-- Services Preview -->
-<section class="services-preview">
-  <div class="container">
-    <div class="section-header">
-      <h2>Mis Servicios</h2>
-      <p>Soluciones completas para tu presencia digital</p>
-    </div>
-    
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-        </div>
-        <h3>Desarrollo Web</h3>
-        <p>Sitios modernos, responsivos y funcionales</p>
-        <div class="service-tech">
-          <span class="tech-tag">Angular</span>
-          <span class="tech-tag">React</span>
-          <span class="tech-tag">HTML/CSS</span>
-          <span class="tech-tag">Tailwind</span>
-        </div>
-      </div>
-      
-      <div class="service-card">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
-        </div>
-        <h3>Diseño UI/UX</h3>
-        <p>Interfaces atractivas y fáciles de usar</p>
-        <div class="service-tech">
-          <span class="tech-tag">Figma</span>
-          <span class="tech-tag">Material Design</span>
-          <span class="tech-tag">Prototipado</span>
-        </div>
-      </div>
-      
-      <div class="service-card">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-        </div>
-        <h3>Aplicaciones Empresariales</h3>
-        <p>Sistemas internos y dashboards</p>
-        <div class="service-tech">
-          <span class="tech-tag">C#</span>
-          <span class="tech-tag">.NET</span>
-          <span class="tech-tag">MySQL</span>
-        </div>
-      </div>
-      
-      <div class="service-card">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-          </svg>
-        </div>
-        <h3>Consultoría Técnica</h3>
-        <p>Optimización de proyectos y asesoramiento</p>
-        <div class="service-tech">
-          <span class="tech-tag">GitHub</span>
-          <span class="tech-tag">VS Code</span>
-          <span class="tech-tag">Testing</span>
-        </div>
-    </div>
-    </div>
-    
-    <div class="services-cta">
-      <a href="/services" class="btn outline">Ver todos los servicios</a>
-    </div>
-  </div>
-</section>
-
-<!-- Projects Preview -->
-<section class="projects-preview">
-  <div class="container">
-    <div class="section-header">
-      <h2>Proyectos Destacados</h2>
-      <p>Algunos de mis trabajos más recientes y exitosos</p>
-    </div>
-    
-    <div class="projects-grid">
-      <div class="project-card featured">
-        <div class="project-image">
-          <div class="project-overlay">
-            <div class="project-actions">
-              <a href="https://www.centrouniversitariodolores.com" target="_blank" class="action-btn" title="Ver demo">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                </svg>
-              </a>
-              <a href="https://github.com/FrancoVivass/centro-universitario" target="_blank" class="action-btn" title="Ver código">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-          <div class="project-placeholder">
-            <svg class="project-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
-            </svg>
-          </div>
-        </div>
-        <div class="project-content">
-          <div class="project-badge">Destacado</div>
-          <h3>Página Centro Universitario</h3>
-          <p>Página web institucional para el Centro Universitario de Dolores con diseño moderno y funcionalidades interactivas.</p>
-          <div class="project-tech">
-            <span class="tech-tag">Angular</span>
-            <span class="tech-tag">JavaScript</span>
-            <span class="tech-tag">CSS</span>
-          </div>
-          <a href="/projects" class="project-link">Ver proyecto →</a>
-        </div>
-      </div>
-      
-      <div class="project-card">
-        <div class="project-image">
-          <div class="project-overlay">
-            <div class="project-actions">
-              <a href="https://vr-trabajo.vercel.app/" target="_blank" class="action-btn" title="Ver demo">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                </svg>
-              </a>
-              <a href="https://github.com/FrancoVivass/VR-TRABAJO" target="_blank" class="action-btn" title="Ver código">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-          <div class="project-placeholder">
-            <svg class="project-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-          </div>
-        </div>
-        <div class="project-content">
-          <h3>Trabajo VR Sistema Solar</h3>
-          <p>Experiencia de realidad virtual del sistema solar desarrollada con Three.js y tecnologías web modernas.</p>
-          <div class="project-tech">
-            <span class="tech-tag">Angular</span>
-            <span class="tech-tag">Three.js</span>
-            <span class="tech-tag">TypeScript</span>
-          </div>
-          <a href="/projects" class="project-link">Ver proyecto →</a>
-        </div>
-  </div>
-      
-      <div class="project-card">
-        <div class="project-image">
-          <div class="project-overlay">
-            <div class="project-actions">
-              <a href="https://juego-simon-dice-liart.vercel.app/" target="_blank" class="action-btn" title="Ver demo">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                </svg>
-              </a>
-              <a href="https://github.com/FrancoVivass/JuegoSimonDice" target="_blank" class="action-btn" title="Ver código">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-          <div class="project-placeholder">
-            <svg class="project-icon" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-5.7-3.427 4.006 4.006 0 0 0-1.907 5.7c.063.105.122.212.182.317.466.806.842 1.676 1.123 2.587.12.4.2.805.24 1.213.04.408.04.82 0 1.228-.04.408-.12.813-.24 1.213-.281.911-.657 1.781-1.123 2.587-.06.105-.119.212-.182.317a4.006 4.006 0 0 0 1.907 5.7 4.006 4.006 0 0 0 5.7-3.427c.092-1.209.138-2.43.138-3.662z"/>
-            </svg>
-          </div>
-        </div>
-        <div class="project-content">
-          <h3>Juego Simon Dice</h3>
-          <p>Juego clásico Simon Dice desarrollado con Angular, TypeScript y CSS con animaciones fluidas.</p>
-          <div class="project-tech">
-            <span class="tech-tag">Angular</span>
-            <span class="tech-tag">TypeScript</span>
-            <span class="tech-tag">CSS</span>
-          </div>
-          <a href="/projects" class="project-link">Ver proyecto →</a>
-        </div>
-    </div>
-    </div>
-    
-    <div class="projects-cta">
-      <a href="/projects" class="btn primary">Ver todos los proyectos</a>
-    </div>
-  </div>
-</section>
-
-<!-- Skills Preview -->
-<section class="skills-preview">
-  <div class="container">
-    <div class="section-header">
-      <h2>Tecnologías que Domino</h2>
-      <p>Herramientas y frameworks que uso para crear soluciones excepcionales</p>
-    </div>
-    
-    <div class="skills-categories">
-      <div class="skill-category">
-        <div class="category-header">
-          <svg class="category-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-          </svg>
-          <h3>Frontend</h3>
-        </div>
-        <div class="skill-list">
-          <span class="skill-tag">Angular (Avanzado)</span>
-          <span class="skill-tag">React (Intermedio/Avanzado)</span>
-          <span class="skill-tag">HTML5 & CSS3 (Avanzado)</span>
-          <span class="skill-tag">Tailwind & Material Design (Avanzado)</span>
-          <span class="skill-tag">Animaciones (Intermedio/Avanzado)</span>
-        </div>
-      </div>
-      
-      <div class="skill-category">
-        <div class="category-header">
-          <svg class="category-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
-          <h3>Backend</h3>
-        </div>
-        <div class="skill-list">
-          <span class="skill-tag">C# / .NET (Intermedio)</span>
-          <span class="skill-tag">Node.js (Básico/Intermedio)</span>
-          <span class="skill-tag">MySQL (Intermedio/Avanzado)</span>
-          <span class="skill-tag">Python (Básico/Intermedio)</span>
-        </div>
-      </div>
-      
-      <div class="skill-category">
-        <div class="category-header">
-          <svg class="category-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
-          </svg>
-          <h3>Cloud & DevOps</h3>
-        </div>
-        <div class="skill-list">
-          <span class="skill-tag">GitHub (Avanzado)</span>
-          <span class="skill-tag">Vercel (Intermedio)</span>
-          <span class="skill-tag">Docker (Básico)</span>
-          <span class="skill-tag">Figma / UI/UX (Intermedio/Avanzado)</span>
-        </div>
-    </div>
-  </div>
-    
-    <div class="skills-cta">
-      <a href="/skills" class="btn outline">Ver todas las habilidades</a>
-    </div>
-  </div>
-</section>
-
-
-<!-- CTA Section -->
-<section class="cta-section">
-  <div class="container">
-    <div class="cta-content">
-      <h2>¿Listo para comenzar tu proyecto?</h2>
-      <p>Hablemos sobre tu idea y cómo puedo ayudarte a hacerla realidad con la mejor tecnología y experiencia.</p>
-      <div class="cta-actions">
-        <a href="/contact" class="btn primary">
-          <span>Iniciar proyecto</span>
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-          </svg>
-        </a>
-        <a href="/about" class="btn secondary">
-          <span>Conocer más</span>
-          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+<footer><a class="brand" href="#inicio"><span>FV</span> Franco Vivas</a><p>Analista de Sistemas · Full-Stack Developer</p><p>© 2026 · Dolores, Argentina</p></footer>
